@@ -5,7 +5,7 @@ import Base from '../../../layouts/Base.astro';
 import Estado from '../../../components/Estado.astro';
 import Portada from '../../../components/Portada.astro';
 import Seguir from '../../../components/Seguir.astro';
-import { SITIO } from '../../../config';
+import { PAISES, SITIO } from '../../../config';
 import {
   fechaCorta,
   fechaIso,
@@ -13,7 +13,7 @@ import {
   getJuegos,
   getNotas,
   notasDeJuego,
-  precioUsd,
+  precioEnMoneda,
   seccion,
   ultimaActualizacion,
   urlDev,
@@ -51,7 +51,23 @@ const nombresLinks: Record<string, string> = {
   presskit: 'Press kit',
 };
 const links = Object.entries(data.links).filter(([, url]) => url);
-const hayOferta = data.mejorOferta && (!data.precio || data.mejorOferta.usd < data.precio.usd);
+
+// Precios ya formateados, en el orden de PAISES. El primero disponible es el que se ve al cargar.
+const precios = PAISES.flatMap((pais) => {
+  const p = data.precios?.paises[pais.codigo];
+  if (!p) return [];
+  return [
+    {
+      codigo: pais.codigo,
+      nombre: pais.nombre,
+      locales: pais.locales,
+      actual: precioEnMoneda(p.actual, p.moneda),
+      lista: precioEnMoneda(p.lista, p.moneda),
+      descuento: p.actual < p.lista ? Math.round((1 - p.actual / p.lista) * 100) : 0,
+    },
+  ];
+});
+const porDefecto = precios[0];
 ---
 
 <Base
@@ -167,29 +183,43 @@ const hayOferta = data.mejorOferta && (!data.precio || data.mejorOferta.usd < da
         <Seguir nombre={data.nombre} etiqueta={`juego-${juego.id}`} rss={rss} />
 
         {
-          (data.precio || data.mejorOferta || data.links.steam) && (
-            <section class="tarjeta caja" aria-labelledby="precio">
-              <h2 id="precio">Precio</h2>
-              {data.precio ? (
-                <p class="caja__precio">
-                  {precioUsd(data.precio.usd)}
-                  <span class="apagado"> en {data.precio.tienda}</span>
-                </p>
+          (precios.length > 0 || data.links.steam) && (
+            <section class="tarjeta caja" aria-labelledby="precio" data-precios={JSON.stringify(precios)}>
+              <h2 id="precio">Precio en Steam</h2>
+              {porDefecto ? (
+                <>
+                  <p class="caja__precio">
+                    <span data-actual>{porDefecto.actual}</span>
+                    <s data-lista hidden={!porDefecto.descuento}>{porDefecto.lista}</s>
+                    <span class="etiqueta etiqueta--fucsia" data-descuento hidden={!porDefecto.descuento}>
+                      -{porDefecto.descuento}%
+                    </span>
+                  </p>
+                  <p class="caja__pais">
+                    <span data-solo-texto>en {porDefecto.nombre}</span>
+                    <label data-elegir hidden>
+                      <span>Precio para</span>
+                      <select id="pais-precio" data-pais>
+                        {precios.map((p) => (
+                          <option value={p.codigo} selected={p.codigo === porDefecto.codigo}>
+                            {p.nombre}
+                          </option>
+                        ))}
+                      </select>
+                    </label>
+                  </p>
+                  <noscript>
+                    <ul class="caja__lista">
+                      {precios.map((p) => (
+                        <li>
+                          {p.nombre}: {p.actual}
+                        </li>
+                      ))}
+                    </ul>
+                  </noscript>
+                </>
               ) : (
                 <p class="apagado">Todavía no tiene precio.</p>
-              )}
-              {hayOferta && data.mejorOferta && (
-                <p>
-                  Mejor oferta: <strong>{precioUsd(data.mejorOferta.usd)}</strong> en{' '}
-                  {data.mejorOferta.url ? (
-                    <a href={data.mejorOferta.url} rel="noopener">
-                      {data.mejorOferta.tienda}
-                    </a>
-                  ) : (
-                    data.mejorOferta.tienda
-                  )}
-                  {data.mejorOferta.fecha && <span class="apagado"> ({fechaCorta(data.mejorOferta.fecha)})</span>}
-                </p>
               )}
               {data.links.steam && (
                 <a class="boton boton--suave" href={data.links.steam} rel="noopener" data-umami-event="steam">
@@ -198,8 +228,10 @@ const hayOferta = data.mejorOferta && (!data.precio || data.mejorOferta.usd < da
                     : 'Sumarlo a tu lista de deseos'}
                 </a>
               )}
-              {(data.precio || hayOferta) && (
-                <p class="apagado">Precios en dólares. Pueden variar según tu país.</p>
+              {data.precios && (
+                <p class="apagado">
+                  Precio de Steam al {fechaCorta(data.precios.fecha)}. Steam cobra distinto en cada país.
+                </p>
               )}
             </section>
           )
@@ -390,7 +422,79 @@ const hayOferta = data.mejorOferta && (!data.precio || data.mejorOferta.usd < da
   .caja__precio {
     font: 800 1.6rem/1.1 var(--titulos);
   }
-  .caja__precio .apagado {
-    font: 400 0.9rem var(--texto);
+  .caja__precio {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .caja__precio s {
+    font: 400 0.95rem var(--texto);
+    color: var(--marron-medio);
+  }
+  .caja .caja__pais {
+    margin-top: -0.4rem;
+    font-size: 0.9rem;
+    color: var(--marron-medio);
+  }
+  .caja__pais label {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .caja__pais select {
+    max-width: 100%;
+    min-height: 36px;
+    padding: 0.25em 0.5em;
+    border: var(--borde);
+    border-radius: 8px;
+    background: #fff;
+    color: var(--marron-oscuro);
+    font: inherit;
+  }
+  .caja__lista {
+    margin: 0 0 0.75rem;
+    padding-left: 1.1em;
+    font-size: 0.9rem;
   }
 </style>
+
+<script>
+  // Elige el precio del país de quien lee: el que eligió antes o el de su navegador.
+  type Precio = { codigo: string; locales: string[]; actual: string; lista: string; descuento: number };
+  const caja = document.querySelector<HTMLElement>('[data-precios]');
+  const select = caja?.querySelector<HTMLSelectElement>('[data-pais]');
+  if (caja && select) {
+    const precios: Precio[] = JSON.parse(caja.dataset.precios ?? '[]');
+    const CLAVE = 'labind-pais';
+    const pintar = (codigo: string) => {
+      const p = precios.find((x) => x.codigo === codigo);
+      if (!p) return;
+      caja.querySelector('[data-actual]')!.textContent = p.actual;
+      const lista = caja.querySelector<HTMLElement>('[data-lista]')!;
+      const descuento = caja.querySelector<HTMLElement>('[data-descuento]')!;
+      lista.textContent = p.lista;
+      descuento.textContent = `-${p.descuento}%`;
+      lista.hidden = descuento.hidden = !p.descuento;
+      select.value = codigo;
+    };
+    let elegido: string | null = null;
+    try {
+      elegido = localStorage.getItem(CLAVE);
+    } catch {}
+    if (!elegido || !precios.some((p) => p.codigo === elegido)) {
+      const regiones = navigator.languages.map((l) => l.split('-')[1]?.toUpperCase()).filter(Boolean);
+      elegido = regiones.map((r) => precios.find((p) => p.locales.includes(r))?.codigo).find(Boolean) ?? null;
+    }
+    if (elegido) pintar(elegido);
+    caja.querySelector<HTMLElement>('[data-solo-texto]')!.hidden = true;
+    caja.querySelector<HTMLElement>('[data-elegir]')!.hidden = false;
+    select.addEventListener('change', () => {
+      pintar(select.value);
+      try {
+        localStorage.setItem(CLAVE, select.value);
+      } catch {}
+    });
+  }
+</script>

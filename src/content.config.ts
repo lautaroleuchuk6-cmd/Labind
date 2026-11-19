@@ -31,11 +31,20 @@ const portada = (image: () => z.ZodTypeAny) =>
     })
     .optional();
 
-const precio = z.object({
-  usd: z.number().nonnegative(),
-  tienda: z.string(),
-  url: url.optional(),
-  fecha: z.coerce.date().optional(),
+// Precio de Steam por país. Lo escribe `npm run precios`, no se carga a mano.
+const precios = z.object({
+  tienda: z.string().default('Steam'),
+  fecha: z.coerce.date(),
+  // Clave: código de país de src/config.ts (AR, MX, CL…).
+  paises: z.record(
+    z.string(),
+    z.object({
+      moneda: z.string(),
+      // Precio normal y precio de hoy: si `actual` es menor, está en oferta.
+      lista: z.number().nonnegative(),
+      actual: z.number().nonnegative(),
+    }),
+  ),
 });
 
 const juegos = defineCollection({
@@ -52,8 +61,7 @@ const juegos = defineCollection({
       fechaSalida: z.string().default('Sin fecha'),
       // Una oración que cuenta qué es el juego, sin opinión.
       resumen: z.string().max(200),
-      precio: precio.optional(),
-      mejorOferta: precio.optional(),
+      precios: precios.optional(),
       links,
       // Lo que lee la tarea diaria.
       fuentes: z

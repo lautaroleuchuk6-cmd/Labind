@@ -138,8 +138,8 @@ saldría también para Mac y Linux.
 ### Tenebris Somnia
 
 Survival horror en 2D con cinemáticas filmadas con actores, de Andrés Borghi y
-Saibot Studios. Salió el **16 de octubre de 2026** y cuesta US$ 24,99 en Steam,
-donde también hay una demo gratis.
+Saibot Studios. Salió el **16 de octubre de 2026**. En Steam cuesta US$ 4,99 en
+Argentina (el precio cambia según el país) y también hay una demo gratis.
 [Ficha de Tenebris Somnia](/juegos/tenebris-somnia/).
 
 <!-- OPINIÓN: si lo jugaste, qué te pareció. -->

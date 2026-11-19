@@ -5,7 +5,9 @@
 //   - las noticias de Steam del juego (API pública de noticias por juego)
 //   - el RSS de devlogs de itch.io
 //   - el canal de YouTube del dev (feed público del canal)
-//   - el precio en Steam en dólares y el mínimo histórico según CheapShark
+//   - la fecha de salida y si hay demo según Steam, para detectar cambios de estado
+//
+// Los precios van aparte: `npm run precios` los actualiza solo, por país.
 //
 // No escribe nada: imprime un informe para que Claude actualice las fichas y
 // redacte los borradores. Si una fuente falla, sigue con las demás y lo avisa.
@@ -107,48 +109,23 @@ async function videosYoutube(canalId) {
   }));
 }
 
-async function precios(appId) {
-  const salida = {};
-  // Precio de lista y actual en Steam, en dólares (cc=us).
-  const steam = (await pedir(`https://store.steampowered.com/api/appdetails?appids=${appId}&cc=us&filters=basic,price_overview,release_date`))[appId];
-  if (steam?.success) {
-    const d = steam.data;
-    salida.gratis = d.is_free === true;
-    if (d.price_overview?.currency === 'USD') {
-      salida.steam = {
-        usd: d.price_overview.final / 100,
-        lista: d.price_overview.initial / 100,
-        descuento: d.price_overview.discount_percent,
-      };
-    }
-    if (d.release_date) salida.salida = { proximamente: d.release_date.coming_soon, fecha: d.release_date.date };
-  }
-  // Mínimo histórico y mejor precio de hoy entre varias tiendas.
-  // CheapShark: leé sus condiciones de uso comercial antes de monetizar con estos datos.
-  const busqueda = await pedir(`https://www.cheapshark.com/api/1.0/games?steamAppID=${appId}`);
-  if (busqueda[0]?.gameID) {
-    const juego = await pedir(`https://www.cheapshark.com/api/1.0/games?id=${busqueda[0].gameID}`);
-    if (juego.cheapestPriceEver?.price) {
-      salida.minimoHistorico = {
-        usd: Number(juego.cheapestPriceEver.price),
-        fecha: new Date(juego.cheapestPriceEver.date * 1000).toISOString().slice(0, 10),
-      };
-    }
-    const mejor = lista(juego.deals).sort((a, b) => Number(a.price) - Number(b.price))[0];
-    if (mejor) {
-      salida.mejorHoy = {
-        usd: Number(mejor.price),
-        tiendaId: mejor.storeID,
-        url: `https://www.cheapshark.com/redirect?dealID=${mejor.dealID}`,
-      };
-    }
-  }
-  return salida;
+// Fecha de salida y demo según Steam, para detectar cambios de estado.
+async function estadoSteam(appId) {
+  const steam = (await pedir(`https://store.steampowered.com/api/appdetails?appids=${appId}&cc=us&l=spanish&filters=basic,release_date,demos,genres`))[appId];
+  if (!steam?.success) return null;
+  const d = steam.data;
+  return {
+    proximamente: d.release_date?.coming_soon ?? null,
+    fecha: d.release_date?.date ?? null,
+    demo: Array.isArray(d.demos) && d.demos.length > 0,
+    accesoAnticipado: (d.genres ?? []).some((g) => g.id === '70'),
+    gratis: d.is_free === true,
+  };
 }
 
 async function revisar(ficha) {
   const f = ficha.fuentes ?? {};
-  const resultado = { id: ficha.id, nombre: ficha.nombre, archivo: ficha.archivo, novedades: [], precios: null, errores: [], avisos: [] };
+  const resultado = { id: ficha.id, nombre: ficha.nombre, archivo: ficha.archivo, novedades: [], steam: null, errores: [], avisos: [] };
   const intentar = async (nombre, tarea) => {
     try {
       return await tarea();
@@ -167,15 +144,16 @@ async function revisar(ficha) {
     .flatMap((t) => t ?? [])
     .filter((n) => !Number.isNaN(n.fecha.valueOf()) && n.fecha.valueOf() >= desde)
     .sort((a, b) => b.fecha - a.fecha);
-  if (f.steamAppId) resultado.precios = await intentar('Precios', () => precios(f.steamAppId));
+  if (f.steamAppId) resultado.steam = await intentar('Estado en Steam', () => estadoSteam(f.steamAppId));
 
   if (!f.steamAppId && !f.itchRss && !f.youtubeCanalId) resultado.avisos.push('La ficha no tiene ninguna fuente cargada.');
   if (!ficha.porQueSeguirlo) resultado.avisos.push('Falta "Por qué seguirlo" (lo escribe una persona).');
   if (!ficha.portada) resultado.avisos.push('Falta la imagen de portada del press kit.');
   if (ficha.borrador) resultado.avisos.push('La ficha está en borrador.');
-  const p = resultado.precios;
-  if (p?.steam && ficha.precio?.usd !== p.steam.lista) {
-    resultado.avisos.push(`Precio de lista en Steam: US$ ${p.steam.lista} (la ficha dice ${ficha.precio?.usd ?? 'nada'}).`);
+  const st = resultado.steam;
+  if (st) {
+    const sugerido = st.proximamente ? (st.demo ? 'Con demo' : 'Anunciado') : st.accesoAnticipado ? 'Acceso anticipado' : 'Lanzado';
+    if (sugerido !== ficha.estado) resultado.avisos.push(`Según Steam el estado sería "${sugerido}" (la ficha dice "${ficha.estado}"). Confirmar.`);
   }
   return resultado;
 }
@@ -201,7 +179,7 @@ if (enJson) {
       if (n.resumen) console.log(`  ${n.resumen}`);
     }
     if (r.novedades.length) console.log();
-    if (r.precios && Object.keys(r.precios).length) console.log(`Precios: ${JSON.stringify(r.precios)}\n`);
+    if (r.steam) console.log(`Steam: salida ${r.steam.fecha ?? 'sin dato'}${r.steam.proximamente ? ' (todavía no salió)' : ''}, ${r.steam.demo ? 'con demo' : 'sin demo'}\n`);
     for (const a of r.avisos) console.log(`- Aviso: ${a}`);
     for (const e of r.errores) console.log(`- No se pudo leer ${e}`);
     if (r.avisos.length || r.errores.length) console.log();

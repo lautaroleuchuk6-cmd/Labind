@@ -77,10 +77,16 @@ precios y datos, y abre un pull request con 1 a 3 borradores. `CLAUDE.md` y
 `docs/guia-de-estilo.md` son las reglas que sigue al escribir.
 
 ```sh
+npm run precios                        # precio de Steam por país, en cada ficha
 npm run novedades -- --dias 2          # informe de las últimas 48 horas
 npm run novedades -- --juego mi-juego  # una sola ficha
 ```
 
-El informe usa las APIs públicas de Steam, los RSS de itch.io y YouTube, y
-CheapShark para el mínimo histórico. Antes de monetizar con datos de precios,
-leé las condiciones de uso comercial de la API que uses.
+**Precios por país.** Steam cobra distinto en cada región, así que cada ficha
+guarda el precio de varios países (la lista es `PAISES`, en `src/config.ts`).
+La ficha muestra el de Argentina y cambia sola al país del navegador de quien
+lee, que también puede elegirlo a mano. `npm run precios` los actualiza todos.
+
+Los scripts usan las APIs públicas de Steam y los RSS de itch.io y YouTube. Si
+más adelante sumás precios de otras tiendas o mínimos históricos, buscá una
+API que los dé por país y leé sus condiciones de uso comercial.

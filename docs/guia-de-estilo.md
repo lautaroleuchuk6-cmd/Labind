@@ -57,8 +57,10 @@ pena seguir. **Cercano y entusiasta, pero honesto.**
 
 - Fechas completas: "12 de marzo de 2027". Nada de "ayer" o "la semana que
   viene", que envejecen mal.
-- Precios en dólares con la tienda: "US$ 14,99 en Steam". Si es un mínimo
-  histórico, se dice.
+- Los precios cambian según el país, así que siempre se dice de dónde son:
+  "US$ 4,99 en Steam en Argentina". Por defecto va el de Argentina; la ficha
+  muestra el de cada país. Nunca el precio de Estados Unidos como si fuera el
+  de todos.
 - Los descuentos, con el precio final y hasta cuándo dura la oferta.
 
 ## Rumores

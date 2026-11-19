@@ -49,6 +49,29 @@ export type SeccionId = (typeof SECCIONES)[number]['id'];
 
 export const ESTADOS = ['Anunciado', 'Con demo', 'Acceso anticipado', 'Lanzado'] as const;
 
+// Países para los que se guarda el precio de Steam. Steam cobra distinto en
+// cada región: `cc` es el país que se consulta y `locales`, los países cuyo
+// navegador elige esa opción sola. El primero es el que se muestra por defecto.
+export const PAISES = [
+  { codigo: 'AR', nombre: 'Argentina', cc: 'ar', locales: ['AR'] },
+  { codigo: 'MX', nombre: 'México', cc: 'mx', locales: ['MX'] },
+  { codigo: 'CL', nombre: 'Chile', cc: 'cl', locales: ['CL'] },
+  { codigo: 'CO', nombre: 'Colombia', cc: 'co', locales: ['CO'] },
+  { codigo: 'PE', nombre: 'Perú', cc: 'pe', locales: ['PE'] },
+  { codigo: 'UY', nombre: 'Uruguay', cc: 'uy', locales: ['UY'] },
+  { codigo: 'BR', nombre: 'Brasil', cc: 'br', locales: ['BR'] },
+  { codigo: 'CR', nombre: 'Costa Rica', cc: 'cr', locales: ['CR'] },
+  // Misma región de Steam que Argentina (dólares para Latinoamérica).
+  {
+    codigo: 'LA',
+    nombre: 'Resto de Sudamérica y Centroamérica',
+    cc: 'ec',
+    locales: ['BO', 'EC', 'PY', 'VE', 'GT', 'HN', 'SV', 'NI', 'PA'],
+  },
+  { codigo: 'ES', nombre: 'España', cc: 'es', locales: ['ES'] },
+  { codigo: 'US', nombre: 'Estados Unidos', cc: 'us', locales: ['US'] },
+] as const;
+
 // "Seguir" por email, etapa 1: un servicio de newsletter con etiquetas.
 // `accion` es la URL a la que el formulario hace POST (la da el servicio).
 // Cada ficha manda su etiqueta: "juego-<slug>" o "dev-<slug>".

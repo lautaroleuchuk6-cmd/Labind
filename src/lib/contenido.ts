@@ -63,5 +63,22 @@ export const fechaLarga = (d: Date) => largo.format(d);
 export const fechaCorta = (d: Date) => corto.format(d);
 export const fechaIso = (d: Date) => d.toISOString().slice(0, 10);
 
-export const precioUsd = (usd: number) =>
-  usd === 0 ? 'Gratis' : `US$ ${usd.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+const SIMBOLOS: Record<string, string> = {
+  USD: 'US$',
+  MXN: 'MX$',
+  CLP: 'CLP$',
+  COP: 'COL$',
+  PEN: 'S/',
+  UYU: '$U',
+  BRL: 'R$',
+  CRC: '₡',
+  EUR: '€',
+};
+
+/** "US$ 4,99", "CLP$ 10.499": el símbolo dice la moneda, porque el peso y el dólar comparten el "$". */
+export function precioEnMoneda(monto: number, moneda: string): string {
+  if (monto === 0) return 'Gratis';
+  const decimales = Number.isInteger(monto) ? 0 : 2;
+  const numero = monto.toLocaleString('es-AR', { minimumFractionDigits: decimales, maximumFractionDigits: decimales });
+  return `${SIMBOLOS[moneda] ?? moneda} ${numero}`;
+}

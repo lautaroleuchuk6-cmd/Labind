@@ -12,7 +12,8 @@
     "build": "astro build",
     "preview": "astro preview",
     "check": "astro sync && astro build",
-    "novedades": "node scripts/novedades.mjs"
+    "novedades": "node scripts/novedades.mjs",
+    "precios": "node scripts/precios.mjs"
   },
   "dependencies": {
     "@astrojs/rss": "^4.0.19",

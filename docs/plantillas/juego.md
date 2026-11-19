@@ -7,14 +7,8 @@ plataformas: [PC]
 estado: Anunciado            # Anunciado | Con demo | Acceso anticipado | Lanzado
 fechaSalida: Sin fecha       # una fecha, '2027' o Sin fecha
 resumen: Una oración que cuenta qué es el juego, sin opinión. Hasta 200 caracteres.
-precio:                      # precio de lista, en dólares. Borrá el bloque si no tiene.
-  usd: 14.99
-  tienda: Steam
-mejorOferta:                 # el precio más bajo conocido. Borrá el bloque si no hubo.
-  usd: 9.99
-  tienda: Steam
-  url: https://store.steampowered.com/app/000000/
-  fecha: 2026-12-17
+# El bloque `precios` no se escribe a mano: lo carga `npm run precios` con el
+# precio de Steam de cada país, a partir de `fuentes.steamAppId`.
 links:                       # solo los que existan
   steam: https://store.steampowered.com/app/000000/
   itch: https://dev.itch.io/juego

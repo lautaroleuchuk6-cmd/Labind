@@ -9,13 +9,13 @@ plataformas: [PC, Switch]
 estado: Con demo
 fechaSalida: '2027'
 resumen: Un roguelike inventado sobre mantener prendido un fuego en la Puna, que usamos como ejemplo de ficha.
-precio:
-  usd: 14.99
+precios:
   tienda: Steam
-mejorOferta:
-  usd: 11.99
-  tienda: Steam
-  fecha: 2026-11-10
+  fecha: 2026-11-19
+  paises:
+    AR: { moneda: USD, lista: 7.99, actual: 5.99 }
+    MX: { moneda: MXN, lista: 149.99, actual: 112.49 }
+    US: { moneda: USD, lista: 14.99, actual: 11.24 }
 links:
   steam: https://example.com/steam/lumbre
   itch: https://example.com/itch/lumbre

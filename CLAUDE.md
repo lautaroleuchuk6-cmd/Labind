@@ -19,6 +19,7 @@ tarea de cada mañana, seguí `docs/tarea-diaria.md`.
 - `src/data/eventos.ts`: calendario de Steam.
 - `docs/plantillas/`: una plantilla por tipo de archivo, para copiar.
 - `scripts/novedades.mjs`: lee las fuentes de cada ficha (`npm run novedades`).
+- `scripts/precios.mjs`: carga el precio de Steam por país (`npm run precios`).
 
 Los archivos `ejemplo-*` son contenido inventado en borrador. No los uses como
 fuente ni los enlaces desde contenido real.
@@ -46,8 +47,11 @@ fuente ni los enlaces desde contenido real.
 7. **Estado de un juego** (`Anunciado`, `Con demo`, `Acceso anticipado`,
    `Lanzado`): si lo cambiás, decilo en la descripción del pull request para
    que se confirme.
-8. **Precios** en dólares, con la tienda. `precio` es el precio de lista;
-   `mejorOferta`, el más bajo conocido, con su fecha.
+8. **Precios** por país, nunca uno solo: Steam cobra distinto en cada región
+   (en Argentina un juego puede costar la quinta parte que en Estados Unidos).
+   El bloque `precios` de la ficha lo escribe `npm run precios`; no se edita a
+   mano. En una nota, todo precio dice de qué país es, y por defecto se usa el
+   de Argentina.
 9. Al tocar una ficha, actualizá `actualizado` con la fecha del día.
 
 ## Publicar
@@ -64,7 +68,9 @@ fuente ni los enlaces desde contenido real.
 - `npm run dev`: sitio local, con borradores.
 - `npm run build`: compila como en producción. Valida todos los campos; si un
   archivo está mal, falla y dice cuál. Corré esto antes de cada commit.
-- `npm run novedades -- --dias 2`: informe de novedades y precios por ficha.
+- `npm run novedades -- --dias 2`: informe de novedades y cambios de estado por ficha.
+- `npm run precios`: actualiza el precio de Steam por país en cada ficha.
+  Los países están en `PAISES`, en `src/config.ts`.
 
 ## Diseño
 
