@@ -1,0 +1,83 @@
+---
+import { APORTES, REDES, SITIO } from '../config';
+
+const nombresRedes: Record<string, string> = {
+  x: 'X',
+  bluesky: 'Bluesky',
+  instagram: 'Instagram',
+  tiktok: 'TikTok',
+  youtube: 'YouTube',
+  discord: 'Discord',
+};
+const redes = Object.entries(REDES).filter(([, url]) => url);
+const aportes = [
+  APORTES.cafecito && { texto: 'Invitame un Cafecito', url: APORTES.cafecito },
+  APORTES.kofi && { texto: 'Ko-fi', url: APORTES.kofi },
+].filter(Boolean) as { texto: string; url: string }[];
+---
+
+<footer class="pie">
+  <div class="pie__fila">
+    <div>
+      <p class="pie__logo">Labind</p>
+      <p class="apagado">{SITIO.lema} En español, con foco en Latinoamérica.</p>
+    </div>
+    <ul>
+      <li><a href="/sobre/">Sobre Labind</a></li>
+      <li><a href="/manda-tu-juego/">Mandá tu juego</a></li>
+      <li><a href="/devs/">Desarrolladores</a></li>
+      <li><a href="/privacidad/">Privacidad</a></li>
+      <li><a href="/rss.xml">RSS</a></li>
+    </ul>
+    {
+      (redes.length > 0 || aportes.length > 0) && (
+        <ul>
+          {redes.map(([red, url]) => (
+            <li>
+              <a href={url} rel="me noopener">
+                {nombresRedes[red]}
+              </a>
+            </li>
+          ))}
+          {aportes.map((a) => (
+            <li>
+              <a href={a.url} rel="noopener">
+                {a.texto}
+              </a>
+            </li>
+          ))}
+        </ul>
+      )
+    }
+  </div>
+</footer>
+
+<style>
+  .pie {
+    border-top: var(--borde);
+    background: var(--crema-clara);
+  }
+  .pie__fila {
+    max-width: var(--ancho);
+    margin: 0 auto;
+    padding: 2rem 1rem 2.5rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+    gap: 1.5rem 2.5rem;
+  }
+  .pie__logo {
+    font: 800 1.5rem var(--titulos);
+    letter-spacing: -0.04em;
+    color: var(--fucsia);
+    margin: 0 0 0.25rem;
+  }
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  li a {
+    display: inline-block;
+    padding: 0.3rem 0;
+  }
+</style>

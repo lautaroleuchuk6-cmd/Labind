@@ -1,0 +1,78 @@
+---
+import '@fontsource-variable/bricolage-grotesque';
+import '../styles/global.css';
+import Cabecera from '../components/Cabecera.astro';
+import Pie from '../components/Pie.astro';
+import { SITIO, MEDICION } from '../config';
+
+interface Props {
+  titulo?: string;
+  descripcion?: string;
+  tipo?: 'website' | 'article';
+  imagen?: string;
+  /** RSS propio de la página (por ejemplo, el de una ficha). */
+  rss?: { titulo: string; url: string };
+  noIndexar?: boolean;
+}
+
+const { titulo, descripcion = SITIO.descripcion, tipo = 'website', imagen, rss, noIndexar = false } = Astro.props;
+const tituloCompleto = titulo ? `${titulo} · ${SITIO.nombre}` : `${SITIO.nombre}: ${SITIO.lema}`;
+const canonica = new URL(Astro.url.pathname, Astro.site);
+---
+
+<!doctype html>
+<html lang={SITIO.idioma}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{tituloCompleto}</title>
+    <meta name="description" content={descripcion} />
+    <link rel="canonical" href={canonica} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="alternate" type="application/rss+xml" title={`${SITIO.nombre}: todas las notas`} href="/rss.xml" />
+    {rss && <link rel="alternate" type="application/rss+xml" title={rss.titulo} href={rss.url} />}
+    <meta name="theme-color" content="#F7EDE0" />
+    {noIndexar && <meta name="robots" content="noindex" />}
+
+    <meta property="og:site_name" content={SITIO.nombre} />
+    <meta property="og:type" content={tipo} />
+    <meta property="og:title" content={titulo ?? SITIO.nombre} />
+    <meta property="og:description" content={descripcion} />
+    <meta property="og:url" content={canonica} />
+    <meta property="og:locale" content="es_AR" />
+    {imagen && <meta property="og:image" content={new URL(imagen, Astro.site)} />}
+    <meta name="twitter:card" content={imagen ? 'summary_large_image' : 'summary'} />
+
+    {MEDICION.searchConsole && <meta name="google-site-verification" content={MEDICION.searchConsole} />}
+    {
+      MEDICION.umamiScript && MEDICION.umamiSitio && (
+        <script is:inline defer src={MEDICION.umamiScript} data-website-id={MEDICION.umamiSitio} />
+      )
+    }
+  </head>
+  <body>
+    <a class="saltar" href="#contenido">Ir al contenido</a>
+    <Cabecera />
+    <main id="contenido">
+      <slot />
+    </main>
+    <Pie />
+  </body>
+</html>
+
+<style>
+  .saltar {
+    position: absolute;
+    left: 1rem;
+    top: -4rem;
+    z-index: 10;
+    padding: 0.5rem 1rem;
+    background: var(--marron-oscuro);
+    color: var(--crema);
+    border-radius: 0 0 8px 8px;
+  }
+  .saltar:focus {
+    top: 0;
+  }
+</style>

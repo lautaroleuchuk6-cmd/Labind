@@ -1,0 +1,63 @@
+---
+// Avisos de transparencia: afiliados, patrocinio y rumores.
+interface Props {
+  tipo: 'afiliados' | 'patrocinado' | 'rumor';
+  rumor?: string;
+}
+const { tipo, rumor } = Astro.props;
+---
+
+<p class="aviso">
+  {
+    tipo === 'afiliados' && (
+      <>
+        <strong>Links de afiliado.</strong> Si comprás desde algunos links de esta nota, Labind recibe una comisión. A
+        vos no te cambia el precio, y no cambia lo que recomendamos.
+      </>
+    )
+  }
+  {
+    tipo === 'patrocinado' && (
+      <>
+        <strong>Patrocinado.</strong> Esta nota es paga. Aparecer en Labind es gratis: los destacados pagos van siempre
+        marcados así.
+      </>
+    )
+  }
+  {
+    tipo === 'rumor' && rumor === 'sin confirmar' && (
+      <>
+        <strong>Rumor sin confirmar.</strong> Nada de esto es oficial todavía. Abajo está la fuente; si se confirma o se
+        cae, actualizamos esta nota.
+      </>
+    )
+  }
+  {
+    tipo === 'rumor' && rumor === 'confirmado' && (
+      <>
+        <strong>Rumor confirmado.</strong> Esto empezó como rumor y después se confirmó. Dejamos la nota original con la
+        actualización.
+      </>
+    )
+  }
+  {
+    tipo === 'rumor' && rumor === 'falso' && (
+      <>
+        <strong>Este rumor resultó falso.</strong> Lo dejamos publicado con la corrección, para que quede claro qué pasó.
+      </>
+    )
+  }
+</p>
+
+<style>
+  .aviso {
+    max-width: var(--ancho-lectura);
+    margin: 0 0 1.5rem;
+    padding: 0.75rem 1rem;
+    border: var(--borde);
+    border-left: 5px solid var(--fucsia);
+    border-radius: 8px;
+    background: var(--crema-clara);
+    font-size: 0.95rem;
+  }
+</style>

@@ -1,0 +1,70 @@
+---
+// Newsletter semanal: "Lo que pasó con tus juegos esta semana".
+import { NEWSLETTER } from '../config';
+---
+
+{
+  NEWSLETTER.accion && (
+    <section class="tarjeta boletin" aria-labelledby="boletin-titulo">
+      <div>
+        <h2 id="boletin-titulo">Lo que pasó con tus juegos esta semana</h2>
+        <p>Un email por semana con las novedades de los indies que seguimos. En español y sin relleno.</p>
+      </div>
+      <form action={NEWSLETTER.accion} method="post">
+        <input type="hidden" name={NEWSLETTER.campoEtiqueta} value={NEWSLETTER.etiquetaSemanal} />
+        <label class="solo-lectores" for="boletin-email">
+          Tu email
+        </label>
+        <input
+          id="boletin-email"
+          type="email"
+          name={NEWSLETTER.campoEmail}
+          placeholder="tu@email.com"
+          autocomplete="email"
+          required
+        />
+        <button class="boton" type="submit" data-umami-event="newsletter-semanal">
+          Suscribirme
+        </button>
+        <p class="apagado">
+          <a href="/privacidad/">Qué hacemos con tu email</a>.
+        </p>
+      </form>
+    </section>
+  )
+}
+
+<style>
+  .boletin {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+    gap: 1rem 2.5rem;
+    align-items: center;
+    padding: 1.5rem;
+  }
+  h2 {
+    color: var(--fucsia-oscuro);
+  }
+  p {
+    margin: 0;
+  }
+  form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+  }
+  form p {
+    flex-basis: 100%;
+  }
+  input[type='email'] {
+    flex: 1 1 12rem;
+    min-width: 0;
+    min-height: 44px;
+    padding: 0.5em 0.9em;
+    border: var(--borde);
+    border-radius: 999px;
+    background: #fff;
+    color: var(--marron-oscuro);
+    font: inherit;
+  }
+</style>

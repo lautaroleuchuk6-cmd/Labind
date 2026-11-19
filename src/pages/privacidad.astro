@@ -1,0 +1,92 @@
+---
+// Política de privacidad. Describe lo que el sitio hace de verdad, según src/config.ts:
+// si prendés el newsletter, la analítica o los anuncios, revisá que este texto siga siendo cierto.
+import Base from '../layouts/Base.astro';
+import { CONTACTO, MEDICION, NEWSLETTER, SITIO } from '../config';
+import { fechaLarga } from '../lib/contenido';
+
+// Cambiá esta fecha cada vez que cambie el texto.
+const VIGENTE_DESDE = new Date('2026-11-19');
+const hayNewsletter = Boolean(NEWSLETTER.accion);
+const hayAnalitica = Boolean(MEDICION.umamiScript && MEDICION.umamiSitio);
+---
+
+<Base titulo="Política de privacidad" descripcion="Qué datos guarda Labind, para qué los usa y cómo pedir que se borren.">
+  <article class="prosa">
+    <h1>Política de privacidad</h1>
+    <p class="apagado">Vigente desde el {fechaLarga(VIGENTE_DESDE)}.</p>
+
+    <p>
+      {SITIO.nombre} guarda la menor cantidad de datos posible. Esta página cuenta cuáles son, para qué se usan y cómo
+      pedir que se borren.
+    </p>
+
+    <h2>Email para seguir juegos</h2>
+    {
+      hayNewsletter ? (
+        <>
+          <p>
+            Cuando tocás “Seguir” en una ficha o te suscribís al newsletter semanal, guardamos tu email y qué juegos o
+            desarrolladores elegiste seguir. Lo usamos solo para mandarte esas novedades.
+          </p>
+          <p>
+            Los emails los envía {NEWSLETTER.servicio || 'un servicio de newsletter'}, que guarda tu dirección por
+            cuenta nuestra. No vendemos ni compartimos tu email con nadie más. Cada email trae un link para darte de
+            baja, y al hacerlo dejás de recibirlos.
+          </p>
+        </>
+      ) : (
+        <p>
+          Por ahora el sitio no pide tu email. Las fichas se pueden seguir por RSS, que no requiere dar ningún dato.
+          Cuando se active el aviso por email, esta página lo va a explicar antes.
+        </p>
+      )
+    }
+
+    <h2>Estadísticas de visitas</h2>
+    {
+      hayAnalitica ? (
+        <p>
+          Usamos Umami para saber cuántas visitas tiene cada página y desde dónde llegan. No usa cookies, no guarda tu
+          dirección IP y no te identifica ni te sigue por otros sitios: vemos números, no personas.
+        </p>
+      ) : (
+        <p>Por ahora el sitio no usa ninguna herramienta de estadísticas.</p>
+      )
+    }
+    <p>
+      El sitio está alojado en Cloudflare Pages. Como cualquier servidor web, Cloudflare procesa datos técnicos de cada
+      visita (por ejemplo, la dirección IP) para entregar las páginas y protegerlas de ataques.
+    </p>
+
+    <h2>Cookies y anuncios</h2>
+    <p>
+      {SITIO.nombre} no usa cookies propias y hoy no muestra anuncios. Si más adelante sumamos una red de publicidad,
+      que sí usa cookies, lo vamos a avisar acá antes de activarla.
+    </p>
+
+    <h2>Links a otros sitios</h2>
+    <p>
+      Las notas y las fichas llevan a Steam, itch.io, YouTube y otras tiendas y redes. Algunos links de la sección
+      Ofertas son de afiliado y están avisados en cada nota. Lo que pase en esos sitios depende de sus propias
+      políticas.
+    </p>
+
+    <h2>Tus datos</h2>
+    {
+      CONTACTO.email ? (
+        <p>
+          Podés pedir que te digamos qué datos tuyos tenemos, que los corrijamos o que los borremos. Escribinos a{' '}
+          <a href={`mailto:${CONTACTO.email}`}>{CONTACTO.email}</a>.
+        </p>
+      ) : hayNewsletter ? (
+        <p>Para dejar de recibir emails y que borremos tu dirección, usá el link de baja que trae cada email.</p>
+      ) : (
+        <p>Hoy el sitio no guarda ningún dato personal tuyo.</p>
+      )
+    }
+
+    <h2>Cambios</h2>
+    <p>Si esta política cambia, actualizamos la fecha de arriba y contamos acá qué cambió.</p>
+  </article>
+</Base>

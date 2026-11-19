@@ -1,0 +1,159 @@
+---
+import { getEntries, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Aviso from '../../components/Aviso.astro';
+import Fuentes from '../../components/Fuentes.astro';
+import Portada from '../../components/Portada.astro';
+import Seguir from '../../components/Seguir.astro';
+import TarjetaJuego from '../../components/TarjetaJuego.astro';
+import { SITIO } from '../../config';
+import { VER_BORRADORES, fechaIso, fechaLarga, getNotas, seccion, urlDev, type Nota } from '../../lib/contenido';
+
+export async function getStaticPaths() {
+  const notas = await getNotas();
+  return notas.map((nota) => ({ params: { seccion: nota.data.seccion, slug: nota.id }, props: { nota } }));
+}
+
+interface Props {
+  nota: Nota;
+}
+const { nota } = Astro.props;
+const { data } = nota;
+const sec = seccion(data.seccion);
+const { Content } = await render(nota);
+const visible = (e: { data: { borrador: boolean } }) => VER_BORRADORES || !e.data.borrador;
+const juegos = (await getEntries(data.juegos)).filter(visible);
+const devs = (await getEntries(data.devs)).filter(visible);
+
+const esquema = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: data.titulo,
+  description: data.descripcion,
+  datePublished: fechaIso(data.fecha),
+  dateModified: fechaIso(data.actualizada ?? data.fecha),
+  inLanguage: SITIO.idioma,
+  author: { '@type': 'Person', name: SITIO.autor },
+  publisher: { '@type': 'Organization', name: SITIO.nombre, url: SITIO.url },
+};
+---
+
+<Base
+  titulo={data.titulo}
+  descripcion={data.descripcion}
+  tipo="article"
+  imagen={data.portada?.archivo.src}
+  noIndexar={data.borrador}
+>
+  <script type="application/ld+json" is:inline set:html={JSON.stringify(esquema)} />
+  <article>
+    <header class="nota__cabeza">
+      <ul class="etiquetas">
+        <li><a class="etiqueta" href={`/${sec.id}/`}>{sec.titulo}</a></li>
+        {data.rumor && <li><span class="etiqueta etiqueta--oscura">Rumor {data.rumor}</span></li>}
+        {data.patrocinado && <li><span class="etiqueta etiqueta--oscura">Patrocinado</span></li>}
+        {data.borrador && <li><span class="etiqueta etiqueta--borrador">Borrador: no se publica</span></li>}
+      </ul>
+      <h1>{data.titulo}</h1>
+      <p class="nota__bajada">{data.descripcion}</p>
+      <p class="apagado">
+        Por <a href="/sobre/">{SITIO.autor}</a> · <time datetime={fechaIso(data.fecha)}>{fechaLarga(data.fecha)}</time>
+        {
+          data.actualizada && (
+            <>
+              {' '}
+              · Actualizada el <time datetime={fechaIso(data.actualizada)}>{fechaLarga(data.actualizada)}</time>
+            </>
+          )
+        }
+      </p>
+    </header>
+
+    {data.rumor && <Aviso tipo="rumor" rumor={data.rumor} />}
+    {data.patrocinado && <Aviso tipo="patrocinado" />}
+    {data.afiliados && <Aviso tipo="afiliados" />}
+
+    {
+      data.portada && (
+        <div class="nota__portada">
+          <Portada portada={data.portada} nombre={data.titulo} credito prioridad />
+        </div>
+      )
+    }
+
+    <div class="prosa">
+      <Content />
+    </div>
+
+    <Fuentes fuentes={data.fuentes} />
+  </article>
+
+  {
+    juegos.length === 1 && (
+      <div class="nota__seguir">
+        <Seguir
+          nombre={juegos[0].data.nombre}
+          etiqueta={`juego-${juegos[0].id}`}
+          rss={`/juegos/${juegos[0].id}/rss.xml`}
+        />
+      </div>
+    )
+  }
+
+  {
+    juegos.length > 0 && (
+      <section class="bloque" aria-labelledby="fichas">
+        <div class="bloque__cabeza">
+          <h2 id="fichas">{juegos.length === 1 ? 'La ficha del juego' : 'Los juegos de esta nota'}</h2>
+        </div>
+        <ul class="grilla">
+          {juegos.map((juego) => (
+            <li>
+              <TarjetaJuego juego={juego} />
+            </li>
+          ))}
+        </ul>
+      </section>
+    )
+  }
+
+  {
+    devs.length > 0 && (
+      <p class="nota__devs">
+        Desarrolladores en esta nota:{' '}
+        {devs.map((dev, i) => (
+          <>
+            {i > 0 && ', '}
+            <a href={urlDev(dev)}>{dev.data.nombre}</a>
+          </>
+        ))}
+      </p>
+    )
+  }
+</Base>
+
+<style>
+  .nota__cabeza {
+    max-width: var(--ancho-lectura);
+    margin-bottom: 1.5rem;
+  }
+  h1 {
+    margin: 0.75rem 0 0.5rem;
+    font-size: clamp(2rem, 5vw, 3rem);
+  }
+  .nota__bajada {
+    font-size: 1.25rem;
+    line-height: 1.45;
+  }
+  .nota__portada {
+    max-width: var(--ancho-lectura);
+    margin-bottom: 1.5rem;
+  }
+  .nota__seguir {
+    max-width: 30rem;
+    margin-top: 2.5rem;
+  }
+  .nota__devs {
+    margin-top: 2rem;
+  }
+</style>

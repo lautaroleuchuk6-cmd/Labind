@@ -1,0 +1,10 @@
+---
+// Estado de un juego: Anunciado, Con demo, Acceso anticipado o Lanzado.
+interface Props {
+  estado: string;
+}
+const { estado } = Astro.props;
+const clase = estado === 'Lanzado' ? 'etiqueta--oscura' : estado === 'Anunciado' ? '' : 'etiqueta--fucsia';
+---
+
+<span class:list={['etiqueta', clase]}>{estado}</span>

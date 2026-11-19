@@ -1,0 +1,82 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getDevs, getJuegos, juegosDeDev, urlDev } from '../../lib/contenido';
+
+const devs = await getDevs();
+const juegos = await getJuegos();
+---
+
+<Base
+  titulo="Desarrolladores indie"
+  descripcion="Los estudios y devs indie que sigue Labind: quiénes son, de dónde son y qué juegos están haciendo."
+>
+  <header class="cabeza-pagina">
+    <h1>Desarrolladores</h1>
+    <p>Quiénes están detrás de los juegos que seguimos, con foco en los devs de Argentina y Latinoamérica.</p>
+  </header>
+
+  {
+    devs.length > 0 ? (
+      <ul class="grilla">
+        {devs.map((dev) => {
+          const suyos = juegosDeDev(juegos, dev);
+          return (
+            <li>
+              <article class="tarjeta dev">
+                <ul class="etiquetas">
+                  <li>
+                    <span class="etiqueta">{dev.data.pais}</span>
+                  </li>
+                  {dev.data.borrador && (
+                    <li>
+                      <span class="etiqueta etiqueta--borrador">Borrador</span>
+                    </li>
+                  )}
+                </ul>
+                <h2>
+                  <a href={urlDev(dev)}>{dev.data.nombre}</a>
+                </h2>
+                <p>{dev.data.resumen}</p>
+                {suyos.length > 0 && <p class="apagado">{suyos.map((j) => j.data.nombre).join(' · ')}</p>}
+              </article>
+            </li>
+          );
+        })}
+      </ul>
+    ) : (
+      <div class="vacio">
+        <p>Todavía no hay fichas de desarrolladores.</p>
+        <p>
+          ¿Hacés juegos? <a href="/manda-tu-juego/">Contanos del tuyo</a>.
+        </p>
+      </div>
+    )
+  }
+</Base>
+
+<style>
+  .dev {
+    position: relative;
+    padding: 1.1rem 1.15rem;
+    height: 100%;
+  }
+  h2 {
+    font-size: 1.35rem;
+    margin: 0.5rem 0 0.25rem;
+  }
+  h2 a {
+    text-decoration: none;
+  }
+  h2 a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: var(--radio);
+  }
+  .dev:hover h2 a {
+    text-decoration: underline;
+  }
+  p {
+    margin: 0 0 0.4rem;
+  }
+</style>

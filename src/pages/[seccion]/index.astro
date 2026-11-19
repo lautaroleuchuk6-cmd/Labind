@@ -1,0 +1,75 @@
+---
+import Base from '../../layouts/Base.astro';
+import TarjetaNota from '../../components/TarjetaNota.astro';
+import { SECCIONES } from '../../config';
+import { proximosEventos } from '../../data/eventos';
+import { fechaCorta, getNotas, notasDeSeccion } from '../../lib/contenido';
+
+export function getStaticPaths() {
+  return SECCIONES.map((s) => ({ params: { seccion: s.id }, props: { seccion: s } }));
+}
+
+interface Props {
+  seccion: (typeof SECCIONES)[number];
+}
+const { seccion } = Astro.props;
+const notas = notasDeSeccion(await getNotas(), seccion.id);
+const eventos = seccion.id === 'ofertas' ? proximosEventos(new Date(), 2) : [];
+const dia = (iso: string) => fechaCorta(new Date(iso));
+---
+
+<Base titulo={`${seccion.titulo} de juegos indie`} descripcion={seccion.descripcion}>
+  <header class="cabeza-pagina">
+    <h1>{seccion.titulo}</h1>
+    <p>{seccion.descripcion}</p>
+    {
+      seccion.id === 'rumores' && (
+        <p class="apagado">
+          Un rumor es un rumor: cada nota lleva la etiqueta y el link a la fuente. Si después se confirma o resulta
+          falso, la actualizamos.
+        </p>
+      )
+    }
+    {
+      seccion.id === 'ofertas' && (
+        <p class="apagado">
+          Algunas notas de ofertas tienen links de afiliado. Cuando es así, lo avisamos arriba de la nota.
+        </p>
+      )
+    }
+  </header>
+
+  {
+    eventos.length > 0 && (
+      <p class="proximas">
+        <strong>Próximas rebajas y eventos de Steam:</strong>{' '}
+        {eventos.map((e) => `${e.nombre} (${dia(e.desde)} al ${dia(e.hasta)})`).join(' · ')}
+      </p>
+    )
+  }
+
+  {
+    notas.length > 0 ? (
+      <ul class="grilla">
+        {notas.map((nota) => (
+          <li>
+            <TarjetaNota nota={nota} sinSeccion />
+          </li>
+        ))}
+      </ul>
+    ) : (
+      <div class="vacio">
+        <p>Todavía no hay notas en {seccion.titulo}. Están en camino.</p>
+      </div>
+    )
+  }
+</Base>
+
+<style>
+  .proximas {
+    padding: 0.75rem 1rem;
+    border: var(--borde);
+    border-radius: var(--radio);
+    margin-bottom: 1.5rem;
+  }
+</style>

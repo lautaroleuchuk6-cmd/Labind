@@ -1,0 +1,368 @@
+---
+import { getEntry, render } from 'astro:content';
+import Base from '../../../layouts/Base.astro';
+import Estado from '../../../components/Estado.astro';
+import Portada from '../../../components/Portada.astro';
+import Seguir from '../../../components/Seguir.astro';
+import { SITIO } from '../../../config';
+import {
+  fechaCorta,
+  fechaIso,
+  fechaLarga,
+  getJuegos,
+  getNotas,
+  notasDeJuego,
+  precioUsd,
+  seccion,
+  ultimaActualizacion,
+  urlDev,
+  urlNota,
+  type Juego,
+} from '../../../lib/contenido';
+
+export async function getStaticPaths() {
+  const juegos = await getJuegos();
+  return juegos.map((juego) => ({ params: { id: juego.id }, props: { juego } }));
+}
+
+interface Props {
+  juego: Juego;
+}
+const { juego } = Astro.props;
+const { data } = juego;
+const dev = await getEntry(data.dev);
+const todas = await getNotas();
+const notas = notasDeJuego(todas, juego);
+const actualizado = ultimaActualizacion(juego, todas);
+const { Content } = await render(juego);
+const rss = `/juegos/${juego.id}/rss.xml`;
+
+const nombresLinks: Record<string, string> = {
+  steam: 'Steam',
+  itch: 'itch.io',
+  web: 'Sitio oficial',
+  x: 'X',
+  bluesky: 'Bluesky',
+  instagram: 'Instagram',
+  tiktok: 'TikTok',
+  youtube: 'YouTube',
+  discord: 'Discord',
+  presskit: 'Press kit',
+};
+const links = Object.entries(data.links).filter(([, url]) => url);
+const hayOferta = data.mejorOferta && (!data.precio || data.mejorOferta.usd < data.precio.usd);
+---
+
+<Base
+  titulo={`${data.nombre}: novedades, fecha de salida y precio`}
+  descripcion={data.resumen}
+  imagen={data.portada?.archivo.src}
+  rss={{ titulo: `${SITIO.nombre}: novedades de ${data.nombre}`, url: rss }}
+  noIndexar={data.borrador}
+>
+  <article class="ficha">
+    <header class="ficha__cabeza">
+      <div class="ficha__portada tarjeta">
+        <Portada portada={data.portada} nombre={data.nombre} credito prioridad />
+      </div>
+      <div>
+        <ul class="etiquetas">
+          <li><Estado estado={data.estado} /></li>
+          {data.borrador && <li><span class="etiqueta etiqueta--borrador">Borrador: no se publica</span></li>}
+        </ul>
+        <h1>{data.nombre}</h1>
+        <p class="ficha__resumen">{data.resumen}</p>
+        <dl class="datos">
+          <div>
+            <dt>Desarrolla</dt>
+            <dd>{dev ? <a href={urlDev(dev)}>{dev.data.nombre}</a> : data.dev.id}</dd>
+          </div>
+          <div>
+            <dt>País</dt>
+            <dd>{data.pais}</dd>
+          </div>
+          <div>
+            <dt>Género</dt>
+            <dd>{data.generos.join(', ')}</dd>
+          </div>
+          <div>
+            <dt>Plataformas</dt>
+            <dd>{data.plataformas.join(', ')}</dd>
+          </div>
+          <div>
+            <dt>Salida</dt>
+            <dd>{data.fechaSalida}</dd>
+          </div>
+        </dl>
+      </div>
+    </header>
+
+    <div class="ficha__cuerpo">
+      <div class="ficha__principal">
+        {
+          data.porQueSeguirlo && (
+            <section class="opinion" aria-labelledby="por-que">
+              <h2 id="por-que">Por qué seguirlo</h2>
+              <blockquote>
+                <p>{data.porQueSeguirlo}</p>
+                <footer>
+                  {SITIO.autor}, de {SITIO.nombre}
+                </footer>
+              </blockquote>
+            </section>
+          )
+        }
+
+        <div class="prosa">
+          <Content />
+        </div>
+
+        <section class="bloque" aria-labelledby="linea">
+          <div class="bloque__cabeza">
+            <h2 id="linea">Línea de tiempo</h2>
+          </div>
+          {
+            notas.length > 0 ? (
+              <ol class="linea">
+                {notas.map((nota) => (
+                  <li>
+                    <div class="linea__meta">
+                      <time datetime={fechaIso(nota.data.fecha)}>{fechaCorta(nota.data.fecha)}</time>
+                      <span class="etiqueta">{seccion(nota.data.seccion).titulo}</span>
+                      {nota.data.rumor && <span class="etiqueta etiqueta--oscura">Rumor {nota.data.rumor}</span>}
+                      {nota.data.borrador && <span class="etiqueta etiqueta--borrador">Borrador</span>}
+                    </div>
+                    <h3>
+                      <a href={urlNota(nota)}>{nota.data.titulo}</a>
+                    </h3>
+                    <p>{nota.data.descripcion}</p>
+                  </li>
+                ))}
+              </ol>
+            ) : (
+              <div class="vacio">
+                <p>Todavía no hay novedades de {data.nombre}. Seguilo y te avisamos con la primera.</p>
+              </div>
+            )
+          }
+        </section>
+      </div>
+
+      <aside class="ficha__lado">
+        <Seguir nombre={data.nombre} etiqueta={`juego-${juego.id}`} rss={rss} />
+
+        {
+          (data.precio || data.mejorOferta || data.links.steam) && (
+            <section class="tarjeta caja" aria-labelledby="precio">
+              <h2 id="precio">Precio</h2>
+              {data.precio ? (
+                <p class="caja__precio">
+                  {precioUsd(data.precio.usd)}
+                  <span class="apagado"> en {data.precio.tienda}</span>
+                </p>
+              ) : (
+                <p class="apagado">Todavía no tiene precio.</p>
+              )}
+              {hayOferta && data.mejorOferta && (
+                <p>
+                  Mejor oferta: <strong>{precioUsd(data.mejorOferta.usd)}</strong> en{' '}
+                  {data.mejorOferta.url ? (
+                    <a href={data.mejorOferta.url} rel="noopener">
+                      {data.mejorOferta.tienda}
+                    </a>
+                  ) : (
+                    data.mejorOferta.tienda
+                  )}
+                  {data.mejorOferta.fecha && <span class="apagado"> ({fechaCorta(data.mejorOferta.fecha)})</span>}
+                </p>
+              )}
+              {data.links.steam && (
+                <a class="boton boton--suave" href={data.links.steam} rel="noopener" data-umami-event="steam">
+                  {data.estado === 'Lanzado' || data.estado === 'Acceso anticipado'
+                    ? 'Ver en Steam'
+                    : 'Sumarlo a tu lista de deseos'}
+                </a>
+              )}
+              {(data.precio || hayOferta) && (
+                <p class="apagado">Precios en dólares. Pueden variar según tu país.</p>
+              )}
+            </section>
+          )
+        }
+
+        {
+          links.length > 0 && (
+            <section class="tarjeta caja" aria-labelledby="links">
+              <h2 id="links">Links</h2>
+              <ul class="etiquetas">
+                {links.map(([clave, url]) => (
+                  <li>
+                    <a class="etiqueta" href={url} rel="noopener">
+                      {nombresLinks[clave] ?? clave}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )
+        }
+
+        <p class="apagado">
+          Última actualización: <time datetime={fechaIso(actualizado)}>{fechaLarga(actualizado)}</time>
+        </p>
+      </aside>
+    </div>
+  </article>
+</Base>
+
+<style>
+  .ficha__cabeza {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.5rem 2.5rem;
+    align-items: center;
+  }
+  .ficha__portada {
+    padding: 0.5rem;
+  }
+  h1 {
+    margin: 0.6rem 0 0.4rem;
+  }
+  .ficha__resumen {
+    font-size: 1.2rem;
+    max-width: 34rem;
+  }
+  .datos {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr));
+    gap: 0.75rem 1.5rem;
+    margin: 1.25rem 0 0;
+  }
+  dt {
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--marron-medio);
+  }
+  dd {
+    margin: 0;
+    font-weight: 600;
+  }
+  .ficha__cuerpo {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2rem 3rem;
+    margin-top: 2.5rem;
+  }
+  .ficha__lado {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+  @media (min-width: 60rem) {
+    .ficha__cabeza {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    }
+    .ficha__cuerpo {
+      grid-template-columns: minmax(0, 1fr) 21rem;
+      align-items: start;
+    }
+    .ficha__lado {
+      position: sticky;
+      top: 1.5rem;
+    }
+  }
+  /* En el teléfono, "Seguir" y el precio van antes que la línea de tiempo. */
+  @media (max-width: 59.99rem) {
+    .ficha__lado {
+      order: -1;
+    }
+  }
+
+  .opinion {
+    margin-bottom: 1.5rem;
+  }
+  .opinion h2 {
+    font-size: 1.05rem;
+    color: var(--fucsia-oscuro);
+    margin-bottom: 0.5rem;
+  }
+  .opinion blockquote {
+    margin: 0;
+    padding-left: 1.1rem;
+    border-left: 4px solid var(--fucsia);
+    font: 500 clamp(1.2rem, 2.6vw, 1.45rem) / 1.35 var(--titulos);
+    max-width: 38rem;
+  }
+  .opinion blockquote p {
+    margin-bottom: 0.4rem;
+  }
+  .opinion footer {
+    font: 400 0.9rem var(--texto);
+    color: var(--marron-medio);
+  }
+
+  .linea {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .linea li {
+    position: relative;
+    padding: 0 0 1.75rem 1.75rem;
+    border-left: 2px solid var(--marron-claro);
+    margin-left: 0.4rem;
+  }
+  .linea li:last-child {
+    padding-bottom: 0.25rem;
+    border-left-color: transparent;
+  }
+  .linea li::before {
+    content: '';
+    position: absolute;
+    left: -0.5rem;
+    top: 0.35rem;
+    width: 0.85rem;
+    height: 0.85rem;
+    border-radius: 50%;
+    background: var(--fucsia);
+    border: 2px solid var(--crema);
+    box-shadow: 0 0 0 1.5px var(--fucsia-oscuro);
+  }
+  .linea__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    color: var(--marron-medio);
+  }
+  .linea h3 {
+    margin: 0.3rem 0 0.2rem;
+    font-size: 1.25rem;
+  }
+  .linea p {
+    margin: 0;
+  }
+
+  .caja {
+    padding: 1.15rem 1.25rem;
+  }
+  .caja h2 {
+    font-size: 1.05rem;
+    margin-bottom: 0.5rem;
+  }
+  .caja p {
+    margin: 0 0 0.75rem;
+  }
+  .caja p:last-child {
+    margin: 0.75rem 0 0;
+  }
+  .caja__precio {
+    font: 800 1.9rem/1.1 var(--titulos);
+  }
+  .caja__precio .apagado {
+    font: 400 0.9rem var(--texto);
+  }
+</style>

@@ -1,0 +1,27 @@
+{
+  "name": "labind",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Labind: el lugar para seguir juegos indie en español.",
+  "engines": {
+    "node": ">=22.23.4"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro sync && astro build",
+    "novedades": "node scripts/novedades.mjs"
+  },
+  "dependencies": {
+    "@astrojs/rss": "^4.0.19",
+    "@astrojs/sitemap": "^3.7.6",
+    "@fontsource-variable/bricolage-grotesque": "^5.3.0",
+    "astro": "^7.4.13"
+  },
+  "devDependencies": {
+    "fast-xml-parser": "^5.12.1",
+    "yaml": "^2.9.1"
+  }
+}

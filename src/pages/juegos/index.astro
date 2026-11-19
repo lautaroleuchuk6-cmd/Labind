@@ -1,0 +1,66 @@
+---
+import Base from '../../layouts/Base.astro';
+import TarjetaJuego from '../../components/TarjetaJuego.astro';
+import { ESTADOS } from '../../config';
+import { getJuegos } from '../../lib/contenido';
+
+const juegos = await getJuegos();
+const grupos = ESTADOS.map((estado) => ({
+  estado,
+  juegos: juegos.filter((j) => j.data.estado === estado),
+})).filter((g) => g.juegos.length > 0);
+---
+
+<Base
+  titulo="Juegos indie para seguir"
+  descripcion="Las fichas de todos los juegos indie que sigue Labind: estado, fecha de salida, precio y la línea de tiempo con cada novedad."
+>
+  <header class="cabeza-pagina">
+    <h1>Juegos para seguir</h1>
+    <p>
+      Cada juego tiene su ficha: en qué estado está, cuándo sale, cuánto cuesta y todo lo que fue pasando. Tocá
+      “Seguir” en la que te interese y te avisamos cuando haya novedades.
+    </p>
+  </header>
+
+  {
+    grupos.length > 0 ? (
+      <>
+        {grupos.length > 1 && (
+          <nav aria-label="Estados">
+            <ul class="etiquetas">
+              {grupos.map((g) => (
+                <li>
+                  <a class="etiqueta" href={`#${g.estado.toLowerCase().replaceAll(' ', '-')}`}>
+                    {g.estado} ({g.juegos.length})
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        )}
+        {grupos.map((g) => (
+          <section class="bloque" id={g.estado.toLowerCase().replaceAll(' ', '-')}>
+            <div class="bloque__cabeza">
+              <h2>{g.estado}</h2>
+            </div>
+            <ul class="grilla">
+              {g.juegos.map((juego) => (
+                <li>
+                  <TarjetaJuego juego={juego} />
+                </li>
+              ))}
+            </ul>
+          </section>
+        ))}
+      </>
+    ) : (
+      <div class="vacio">
+        <p>Las primeras fichas están en camino.</p>
+        <p>
+          ¿Estás haciendo un juego? <a href="/manda-tu-juego/">Mandalo</a> y lo sumamos.
+        </p>
+      </div>
+    )
+  }
+</Base>

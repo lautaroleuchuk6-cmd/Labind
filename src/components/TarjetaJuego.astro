@@ -1,0 +1,60 @@
+---
+import { getEntry } from 'astro:content';
+import Estado from './Estado.astro';
+import Portada from './Portada.astro';
+import { urlJuego, type Juego } from '../lib/contenido';
+
+interface Props {
+  juego: Juego;
+}
+const { juego } = Astro.props;
+const dev = await getEntry(juego.data.dev);
+---
+
+<article class="tarjeta juego">
+  <Portada portada={juego.data.portada} nombre={juego.data.nombre} />
+  <div class="juego__texto">
+    <ul class="etiquetas">
+      <li><Estado estado={juego.data.estado} /></li>
+      {juego.data.borrador && <li><span class="etiqueta etiqueta--borrador">Borrador</span></li>}
+    </ul>
+    <h3><a href={urlJuego(juego)}>{juego.data.nombre}</a></h3>
+    <p class="apagado">
+      {dev?.data.nombre ?? juego.data.dev.id} · {juego.data.pais} · {juego.data.generos.join(', ')}
+    </p>
+    <p>{juego.data.resumen}</p>
+  </div>
+</article>
+
+<style>
+  .juego {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding: 0.5rem;
+    height: 100%;
+  }
+  .juego__texto {
+    padding: 0.85rem 0.5rem 0.25rem;
+  }
+  h3 {
+    margin: 0.5rem 0 0.15rem;
+    font-size: 1.35rem;
+  }
+  h3 a {
+    text-decoration: none;
+  }
+  /* Toda la tarjeta lleva a la ficha. */
+  h3 a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: var(--radio);
+  }
+  .juego:hover h3 a {
+    text-decoration: underline;
+  }
+  p {
+    margin: 0 0 0.5rem;
+  }
+</style>

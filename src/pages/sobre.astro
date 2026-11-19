@@ -1,0 +1,80 @@
+---
+import Base from '../layouts/Base.astro';
+import { CONTACTO, SITIO } from '../config';
+---
+
+<Base
+  titulo="Sobre Labind"
+  descripcion="Qué es Labind, quién lo escribe y cómo se usa inteligencia artificial para preparar los borradores."
+>
+  <article class="prosa">
+    <h1>Sobre Labind</h1>
+
+    <p>
+      Labind es un sitio para seguir juegos indie y a quienes los hacen, desde el anuncio hasta el lanzamiento, en
+      español. No busca dar primero las noticias generales: busca ser el lugar donde seguís <em>tu</em> juego y te
+      sentís parte de su desarrollo.
+    </p>
+    <p>
+      El foco está en Argentina y Latinoamérica, y en los juegos chicos antes de que se hagan conocidos. Cada juego
+      tiene una ficha con su estado, su fecha de salida, su precio y una línea de tiempo con todo lo que fue pasando.
+    </p>
+
+    <h2>Quién escribe</h2>
+    <p>
+      Labind lo hace {SITIO.autor}. Además de escribir sobre juegos, hace juegos y publica en Steam, así que acá se
+      habla desde adentro: con entusiasmo, pero con honestidad. Si algo no convence, se dice.
+    </p>
+
+    <h2>Cómo se usa la IA</h2>
+    <p>
+      Labind usa Claude, un asistente de inteligencia artificial de Anthropic, para el trabajo de todos los días:
+      revisa lo que publican los juegos en Steam, itch.io y YouTube, actualiza los datos y los precios de las fichas y
+      prepara borradores de notas con sus fuentes.
+    </p>
+    <ul>
+      <li>Nada se publica sin que una persona lo lea, lo corrija y lo apruebe.</li>
+      <li>
+        Las opiniones son de {SITIO.autor}. El “Por qué seguirlo” de cada ficha lo escribe una persona, nunca la IA.
+      </li>
+      <li>Cada nota lleva sus fuentes, así podés ir a ver el original.</li>
+    </ul>
+
+    <h2>Cómo se sostiene</h2>
+    <ul>
+      <li>
+        <strong>Links de afiliado.</strong> Algunas notas de ofertas tienen links con los que Labind recibe una comisión
+        si comprás. Siempre está avisado arriba de la nota, y a vos no te cambia el precio.
+      </li>
+      <li>
+        <strong>Notas patrocinadas.</strong> Aparecer en Labind es gratis. Si alguna vez un dev paga por destacar su
+        juego, la nota va marcada como “Patrocinado”.
+      </li>
+    </ul>
+
+    <h2>Rumores y correcciones</h2>
+    <p>
+      Los rumores llevan siempre la etiqueta “Rumor” y el link a la fuente. Si uno resulta falso, la nota se actualiza
+      y queda dicho. Si encontrás un error en cualquier nota, avisanos y lo corregimos.
+    </p>
+
+    <h2>Imágenes</h2>
+    <p>
+      Las imágenes salen del press kit oficial de cada juego o de su página de Steam, y siempre llevan el crédito. Si
+      sos dev y querés que cambiemos o saquemos una imagen de tu juego, escribinos.
+    </p>
+
+    <h2>Contacto</h2>
+    <p>
+      ¿Hacés un juego? Pasá por <a href="/manda-tu-juego/">Mandá tu juego</a>.
+      {
+        CONTACTO.email && (
+          <>
+            {' '}
+            Para todo lo demás: <a href={`mailto:${CONTACTO.email}`}>{CONTACTO.email}</a>.
+          </>
+        )
+      }
+    </p>
+  </article>
+</Base>

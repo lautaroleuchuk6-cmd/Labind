@@ -1,0 +1,141 @@
+---
+import { render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Seguir from '../../components/Seguir.astro';
+import TarjetaJuego from '../../components/TarjetaJuego.astro';
+import TarjetaNota from '../../components/TarjetaNota.astro';
+import { getDevs, getJuegos, getNotas, juegosDeDev, notasDeDev, type Dev } from '../../lib/contenido';
+
+export async function getStaticPaths() {
+  const devs = await getDevs();
+  return devs.map((dev) => ({ params: { id: dev.id }, props: { dev } }));
+}
+
+interface Props {
+  dev: Dev;
+}
+const { dev } = Astro.props;
+const { data } = dev;
+const juegos = await getJuegos();
+const suyos = juegosDeDev(juegos, dev);
+const notas = notasDeDev(await getNotas(), dev, juegos);
+const entrevistas = notas.filter((n) => n.data.seccion === 'entrevistas');
+const otras = notas.filter((n) => n.data.seccion !== 'entrevistas').slice(0, 6);
+const { Content } = await render(dev);
+
+const nombresLinks: Record<string, string> = {
+  steam: 'Steam',
+  itch: 'itch.io',
+  web: 'Sitio oficial',
+  x: 'X',
+  bluesky: 'Bluesky',
+  instagram: 'Instagram',
+  tiktok: 'TikTok',
+  youtube: 'YouTube',
+  discord: 'Discord',
+  presskit: 'Press kit',
+};
+const links = Object.entries(data.links).filter(([, url]) => url);
+---
+
+<Base
+  titulo={`${data.nombre}: juegos, novedades y entrevistas`}
+  descripcion={data.resumen}
+  noIndexar={data.borrador}
+>
+  <header class="cabeza-pagina">
+    <ul class="etiquetas">
+      <li><span class="etiqueta">Desarrollador</span></li>
+      <li><span class="etiqueta">{data.pais}</span></li>
+      {data.borrador && <li><span class="etiqueta etiqueta--borrador">Borrador: no se publica</span></li>}
+    </ul>
+    <h1>{data.nombre}</h1>
+    <p>{data.resumen}</p>
+    {
+      links.length > 0 && (
+        <ul class="etiquetas">
+          {links.map(([clave, url]) => (
+            <li>
+              <a class="etiqueta" href={url} rel="noopener">
+                {nombresLinks[clave] ?? clave}
+              </a>
+            </li>
+          ))}
+        </ul>
+      )
+    }
+  </header>
+
+  <div class="prosa">
+    <Content />
+  </div>
+
+  <div class="seguir-dev">
+    <Seguir nombre={data.nombre} etiqueta={`dev-${dev.id}`} />
+  </div>
+
+  <section class="bloque" aria-labelledby="juegos">
+    <div class="bloque__cabeza">
+      <h2 id="juegos">Sus juegos</h2>
+    </div>
+    {
+      suyos.length > 0 ? (
+        <ul class="grilla">
+          {suyos.map((juego) => (
+            <li>
+              <TarjetaJuego juego={juego} />
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <div class="vacio">
+          <p>Todavía no cargamos fichas de sus juegos.</p>
+        </div>
+      )
+    }
+  </section>
+
+  {
+    entrevistas.length > 0 && (
+      <section class="bloque" aria-labelledby="entrevistas">
+        <div class="bloque__cabeza">
+          <h2 id="entrevistas">Entrevistas</h2>
+        </div>
+        <ul class="grilla">
+          {entrevistas.map((nota) => (
+            <li>
+              <TarjetaNota nota={nota} sinSeccion />
+            </li>
+          ))}
+        </ul>
+      </section>
+    )
+  }
+
+  {
+    otras.length > 0 && (
+      <section class="bloque" aria-labelledby="notas">
+        <div class="bloque__cabeza">
+          <h2 id="notas">Lo último</h2>
+        </div>
+        <ul class="grilla">
+          {otras.map((nota) => (
+            <li>
+              <TarjetaNota nota={nota} />
+            </li>
+          ))}
+        </ul>
+      </section>
+    )
+  }
+</Base>
+
+<style>
+  h1 {
+    margin-top: 0.6rem;
+  }
+  .seguir-dev {
+    max-width: 30rem;
+    margin-top: 1.5rem;
+  }
+</style>

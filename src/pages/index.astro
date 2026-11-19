@@ -1,0 +1,198 @@
+---
+import Base from '../layouts/Base.astro';
+import Newsletter from '../components/Newsletter.astro';
+import TarjetaJuego from '../components/TarjetaJuego.astro';
+import TarjetaNota from '../components/TarjetaNota.astro';
+import { NEWSLETTER, SECCIONES } from '../config';
+import { proximosEventos } from '../data/eventos';
+import { fechaCorta, getJuegos, getNotas, ultimaActualizacion } from '../lib/contenido';
+
+const notas = await getNotas();
+const juegos = await getJuegos();
+const movidos = juegos
+  .map((juego) => ({ juego, fecha: ultimaActualizacion(juego, notas) }))
+  .sort((a, b) => b.fecha.valueOf() - a.fecha.valueOf())
+  .slice(0, 6);
+const eventos = proximosEventos();
+const dia = (iso: string) => fechaCorta(new Date(iso));
+---
+
+<Base>
+  <section class="portada-sitio">
+    <p class="portada-sitio__sobre">Juegos indie, en español</p>
+    <h1>Seguí <em>tu</em> juego desde el anuncio hasta el lanzamiento.</h1>
+    <p class="portada-sitio__bajada">
+      Labind junta en un solo lugar todo lo que publica cada indie que te interesa: trailers, demos, parches, fechas y
+      ofertas. Con foco en los juegos de Argentina y Latinoamérica.
+    </p>
+    <p class="portada-sitio__botones">
+      <a class="boton" href="/juegos/">Ver los juegos</a>
+      <a class="boton boton--suave" href="/manda-tu-juego/">¿Hacés un juego? Mandalo</a>
+    </p>
+  </section>
+
+  <section class="bloque" aria-labelledby="ultimas">
+    <div class="bloque__cabeza">
+      <h2 id="ultimas">Lo último</h2>
+      <a href="/rss.xml">RSS</a>
+    </div>
+    {
+      notas.length > 0 ? (
+        <ul class="grilla">
+          {notas.slice(0, 6).map((nota) => (
+            <li>
+              <TarjetaNota nota={nota} />
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <div class="vacio">
+          <p>Estamos preparando las primeras notas. Volvé en unos días.</p>
+        </div>
+      )
+    }
+  </section>
+
+  {
+    movidos.length > 0 && (
+      <section class="bloque" aria-labelledby="para-seguir">
+        <div class="bloque__cabeza">
+          <h2 id="para-seguir">Juegos con novedades</h2>
+          <a href="/juegos/">Todas las fichas</a>
+        </div>
+        <ul class="grilla">
+          {movidos.map(({ juego }) => (
+            <li>
+              <TarjetaJuego juego={juego} />
+            </li>
+          ))}
+        </ul>
+      </section>
+    )
+  }
+
+  {
+    NEWSLETTER.accion && (
+      <section class="bloque">
+        <Newsletter />
+      </section>
+    )
+  }
+
+  <section class="bloque" aria-labelledby="secciones">
+    <div class="bloque__cabeza">
+      <h2 id="secciones">Qué vas a encontrar</h2>
+    </div>
+    <ul class="secciones">
+      {
+        SECCIONES.map((s) => (
+          <li>
+            <a href={`/${s.id}/`}>{s.titulo}</a>
+            <span>{s.descripcion}</span>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  {
+    eventos.length > 0 && (
+      <section class="bloque" aria-labelledby="calendario">
+        <div class="bloque__cabeza">
+          <h2 id="calendario">Lo que viene en Steam</h2>
+        </div>
+        <ol class="eventos">
+          {eventos.map((e) => (
+            <li>
+              <strong>{e.nombre}</strong>
+              <span class="apagado">
+                {dia(e.desde)} al {dia(e.hasta)}
+              </span>
+            </li>
+          ))}
+        </ol>
+        <p class="apagado">Fechas del calendario de eventos de Steamworks. Pueden cambiar.</p>
+      </section>
+    )
+  }
+</Base>
+
+<style>
+  .portada-sitio {
+    padding: clamp(1rem, 5vw, 3.5rem) 0 0.5rem;
+    max-width: 50rem;
+  }
+  .portada-sitio__sobre {
+    display: inline-block;
+    margin-bottom: 1rem;
+    padding: 0.15em 0.8em;
+    border: var(--borde);
+    border-radius: 999px;
+    font: 650 0.9rem var(--titulos);
+    letter-spacing: 0.02em;
+  }
+  h1 {
+    font-size: clamp(2.4rem, 8vw, 4.6rem);
+    line-height: 1;
+    letter-spacing: -0.035em;
+  }
+  h1 em {
+    font-style: normal;
+    color: var(--marron-oscuro);
+    text-decoration: underline;
+    text-decoration-color: var(--fucsia);
+    text-decoration-thickness: 0.09em;
+    text-underline-offset: 0.12em;
+  }
+  .portada-sitio__bajada {
+    font-size: clamp(1.1rem, 2.4vw, 1.3rem);
+    max-width: 40rem;
+    margin: 1.25rem 0 1.5rem;
+  }
+  .portada-sitio__botones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin: 0;
+  }
+  .secciones {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr));
+    gap: 0 2.5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .secciones li {
+    display: flex;
+    flex-direction: column;
+    padding: 0.9rem 0;
+    border-top: var(--borde);
+  }
+  .secciones a {
+    font: 750 1.25rem var(--titulos);
+    text-decoration: none;
+  }
+  .secciones a:hover {
+    text-decoration: underline;
+  }
+  .eventos {
+    margin: 0 0 0.75rem;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+    gap: 1rem;
+  }
+  .eventos li {
+    display: flex;
+    flex-direction: column;
+    padding: 0.9rem 1rem;
+    border: var(--borde);
+    border-radius: var(--radio);
+  }
+  .eventos strong {
+    font-family: var(--titulos);
+    font-size: 1.1rem;
+  }
+</style>

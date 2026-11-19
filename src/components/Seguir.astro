@@ -1,0 +1,93 @@
+---
+// Botón "Seguir", etapa 1: suscripción por email con una etiqueta por ficha.
+// Sin servicio de newsletter configurado, queda solo el RSS de la ficha.
+import { NEWSLETTER } from '../config';
+
+interface Props {
+  /** Qué se sigue: "Lumbre", "Fogón Games"… */
+  nombre: string;
+  /** Etiqueta del newsletter: "juego-<slug>" o "dev-<slug>". */
+  etiqueta: string;
+  rss?: string;
+}
+const { nombre, etiqueta, rss } = Astro.props;
+const idCampo = `seguir-${etiqueta}`;
+---
+
+{
+  NEWSLETTER.accion ? (
+    <section class="seguir tarjeta" aria-label={`Seguir a ${nombre}`}>
+        <h2>Seguí a {nombre}</h2>
+        <p>Te avisamos por email cada vez que haya algo nuevo. Nada más.</p>
+        <form action={NEWSLETTER.accion} method="post">
+          <input type="hidden" name={NEWSLETTER.campoEtiqueta} value={etiqueta} />
+          <label class="solo-lectores" for={idCampo}>
+            Tu email
+          </label>
+          <input
+            id={idCampo}
+            type="email"
+            name={NEWSLETTER.campoEmail}
+            placeholder="tu@email.com"
+            autocomplete="email"
+            required
+          />
+          <button class="boton" type="submit" data-umami-event="seguir" data-umami-event-ficha={etiqueta}>
+            Seguir
+          </button>
+        </form>
+        <p class="apagado">
+          Podés darte de baja cuando quieras. <a href="/privacidad/">Qué hacemos con tu email</a>.
+          {rss && (
+            <>
+              {' '}
+              También hay <a href={rss}>RSS de esta ficha</a>.
+            </>
+          )}
+        </p>
+    </section>
+  ) : (
+    rss && (
+      <section class="seguir tarjeta" aria-label={`Seguir a ${nombre}`}>
+          <h2>Seguí a {nombre}</h2>
+          <p>Sumá esta ficha a tu lector de RSS y te enterás de cada novedad.</p>
+          <a class="boton" href={rss} data-umami-event="seguir-rss" data-umami-event-ficha={etiqueta}>
+            Seguir por RSS
+          </a>
+      </section>
+    )
+  )
+}
+
+<style>
+  .seguir {
+    padding: 1.15rem 1.25rem;
+  }
+  h2 {
+    font-size: 1.3rem;
+    margin-bottom: 0.25rem;
+    color: var(--fucsia-oscuro);
+  }
+  p {
+    margin: 0 0 0.85rem;
+  }
+  p:last-child {
+    margin: 0.85rem 0 0;
+  }
+  form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+  }
+  input[type='email'] {
+    flex: 1 1 12rem;
+    min-width: 0;
+    min-height: 44px;
+    padding: 0.5em 0.9em;
+    border: var(--borde);
+    border-radius: 999px;
+    background: #fff;
+    color: var(--marron-oscuro);
+    font: inherit;
+  }
+</style>

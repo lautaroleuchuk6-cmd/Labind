@@ -1,0 +1,90 @@
+---
+import { SECCIONES, SITIO } from '../config';
+
+const ruta = Astro.url.pathname;
+const enlaces = [{ href: '/juegos/', texto: 'Juegos' }, ...SECCIONES.map((s) => ({ href: `/${s.id}/`, texto: s.titulo }))];
+---
+
+<header class="cabecera">
+  <div class="cabecera__fila">
+    <a class="logo" href="/" aria-label={`${SITIO.nombre}, inicio`}>Labind</a>
+    <nav aria-label="Secciones">
+      <ul>
+        {
+          enlaces.map((e) => (
+            <li>
+              <a href={e.href} aria-current={ruta.startsWith(e.href) ? 'page' : undefined}>
+                {e.texto}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .cabecera {
+    border-bottom: var(--borde);
+    background: var(--crema);
+  }
+  .cabecera__fila {
+    max-width: var(--ancho);
+    margin: 0 auto;
+    padding: 0.6rem 1rem 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    column-gap: 2rem;
+  }
+  .logo {
+    font: 800 2rem/1.2 var(--titulos);
+    letter-spacing: -0.04em;
+    color: var(--fucsia);
+    text-decoration: none;
+    padding-bottom: 0.4rem;
+  }
+  nav {
+    flex: 1;
+    min-width: 0;
+  }
+  ul {
+    display: flex;
+    gap: 0.25rem;
+    margin: 0 -0.5rem;
+    padding: 0;
+    list-style: none;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  ul::-webkit-scrollbar {
+    display: none;
+  }
+  nav a {
+    display: block;
+    padding: 0.6rem 0.6rem 0.75rem;
+    color: var(--marron-oscuro);
+    font: 650 1rem var(--titulos);
+    text-decoration: none;
+    white-space: nowrap;
+    border-bottom: 3px solid transparent;
+  }
+  nav a:hover {
+    color: var(--fucsia-oscuro);
+  }
+  nav a[aria-current='page'] {
+    color: var(--fucsia-oscuro);
+    border-bottom-color: var(--fucsia);
+  }
+  @media (max-width: 46rem) {
+    nav {
+      flex-basis: 100%;
+    }
+    /* Deja ver que la fila de secciones sigue hacia la derecha. */
+    ul {
+      mask-image: linear-gradient(to right, #000 calc(100% - 2rem), transparent);
+      padding-right: 1.5rem;
+    }
+  }
+</style>

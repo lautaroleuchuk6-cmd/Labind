@@ -1,0 +1,40 @@
+---
+interface Props {
+  fuentes: { nombre: string; url: string }[];
+}
+const { fuentes } = Astro.props;
+---
+
+{
+  fuentes.length > 0 && (
+    <aside class="fuentes">
+      <h2>Fuentes</h2>
+      <ul>
+        {fuentes.map((f) => (
+          <li>
+            <a href={f.url} rel="noopener">
+              {f.nombre}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </aside>
+  )
+}
+
+<style>
+  .fuentes {
+    max-width: var(--ancho-lectura);
+    margin-top: 2.5rem;
+    padding-top: 1rem;
+    border-top: var(--borde);
+  }
+  h2 {
+    font-size: 1.05rem;
+    margin-bottom: 0.4rem;
+  }
+  ul {
+    margin: 0;
+    padding-left: 1.2em;
+  }
+</style>

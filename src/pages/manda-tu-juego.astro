@@ -1,0 +1,89 @@
+---
+import Base from '../layouts/Base.astro';
+import { CONTACTO } from '../config';
+
+const cuerpoMail = encodeURIComponent(
+  [
+    'Nombre del juego:',
+    'Link de Steam o itch.io:',
+    'Press kit (link a las imágenes):',
+    'País:',
+    'Contacto:',
+    'Qué lo hace especial (tres líneas):',
+  ].join('\n\n'),
+);
+---
+
+<Base
+  titulo="Mandá tu juego"
+  descripcion="¿Estás haciendo un juego indie? Mandalo a Labind: aparecer es gratis y te avisamos cuando salga la nota."
+>
+  <article class="prosa">
+    <h1>Mandá tu juego</h1>
+    <p class="bajada">
+      Si estás haciendo un juego indie, queremos conocerlo. Sobre todo si sos de Argentina o de cualquier lugar de
+      Latinoamérica. <strong>Aparecer en Labind es gratis.</strong>
+    </p>
+
+    <h2>Qué necesitamos</h2>
+    <ol>
+      <li>El nombre del juego.</li>
+      <li>El link de Steam o de itch.io.</li>
+      <li>Un press kit con imágenes (con una carpeta compartida alcanza).</li>
+      <li>De qué país sos vos o el estudio.</li>
+      <li>Un contacto: email, Discord o la red que uses.</li>
+      <li>Tres líneas sobre qué hace especial a tu juego.</li>
+    </ol>
+
+    {
+      CONTACTO.formularioJuego ? (
+        <p>
+          <a class="boton" href={CONTACTO.formularioJuego} rel="noopener" data-umami-event="manda-tu-juego">
+            Completar el formulario
+          </a>
+        </p>
+      ) : CONTACTO.email ? (
+        <p>
+          <a
+            class="boton"
+            href={`mailto:${CONTACTO.email}?subject=${encodeURIComponent('Mi juego para Labind')}&body=${cuerpoMail}`}
+            data-umami-event="manda-tu-juego"
+          >
+            Mandarlo por email
+          </a>
+        </p>
+      ) : (
+        <p class="vacio">Estamos terminando de armar el formulario. Volvé en unos días.</p>
+      )
+    }
+
+    <h2>Qué te prometemos</h2>
+    <ul>
+      <li>Te respondemos en una semana.</li>
+      <li>Te avisamos cuando salga la nota, así la compartís con tu comunidad.</li>
+      <li>
+        Tu juego tiene su ficha, que la gente puede seguir: cada trailer, demo o parche que publiques suma a su línea de
+        tiempo.
+      </li>
+    </ul>
+
+    <h2>Lo que no hacemos</h2>
+    <ul>
+      <li>No cobramos por aparecer, ni por la ficha, ni por las notas.</li>
+      <li>
+        Los destacados pagos son otra cosa, van aparte y siempre marcados como “Patrocinado”. No cambian lo que
+        opinamos de un juego.
+      </li>
+      <li>No usamos imágenes que no sean de tu press kit o de tu página de Steam, y siempre con crédito.</li>
+    </ul>
+  </article>
+</Base>
+
+<style>
+  .bajada {
+    font-size: 1.2rem;
+  }
+  .boton {
+    margin: 0.5rem 0;
+  }
+</style>
