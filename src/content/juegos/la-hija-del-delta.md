@@ -20,6 +20,10 @@ fuentes:
   steamAppId: 3301850
 portada:
   archivo: ./portadas/la-hija-del-delta.jpg
+  alt: Arte de portada de La Hija del Delta, con el logo del juego
+  credito: Bicho Raro Games (arte de la página de Steam)
+captura:
+  archivo: ./capturas/la-hija-del-delta.jpg
   alt: Un pantano con niebla, palmeras secas y restos de construcciones de madera
   credito: Bicho Raro Games (captura de la página de Steam)
 actualizado: 2026-11-19

@@ -119,7 +119,7 @@ const dia = (iso: string) => fechaCorta(new Date(iso));
 
 <style>
   .portada-sitio {
-    padding: clamp(1rem, 5vw, 3.5rem) 0 0.5rem;
+    padding: clamp(0.75rem, 3vw, 2rem) 0 0.25rem;
     max-width: 50rem;
   }
   .portada-sitio__sobre {
@@ -132,7 +132,7 @@ const dia = (iso: string) => fechaCorta(new Date(iso));
     letter-spacing: 0.02em;
   }
   h1 {
-    font-size: clamp(2.4rem, 8vw, 4.6rem);
+    font-size: clamp(2.2rem, 6vw, 3.5rem);
     line-height: 1;
     letter-spacing: -0.035em;
   }
@@ -145,9 +145,9 @@ const dia = (iso: string) => fechaCorta(new Date(iso));
     text-underline-offset: 0.12em;
   }
   .portada-sitio__bajada {
-    font-size: clamp(1.1rem, 2.4vw, 1.3rem);
-    max-width: 40rem;
-    margin: 1.25rem 0 1.5rem;
+    font-size: clamp(1.02rem, 2vw, 1.15rem);
+    max-width: 38rem;
+    margin: 1rem 0 1.25rem;
   }
   .portada-sitio__botones {
     display: flex;
@@ -166,11 +166,12 @@ const dia = (iso: string) => fechaCorta(new Date(iso));
   .secciones li {
     display: flex;
     flex-direction: column;
-    padding: 0.9rem 0;
+    padding: 0.7rem 0;
     border-top: var(--borde);
+    font-size: 0.94rem;
   }
   .secciones a {
-    font: 750 1.25rem var(--titulos);
+    font: 750 1.1rem var(--titulos);
     text-decoration: none;
   }
   .secciones a:hover {

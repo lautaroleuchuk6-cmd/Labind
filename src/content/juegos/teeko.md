@@ -16,6 +16,10 @@ fuentes:
   steamAppId: 3650150
 portada:
   archivo: ./portadas/teeko.jpg
+  alt: Arte de portada de Teeko, con el logo del juego
+  credito: Ripe Render Games (arte de la página de Steam)
+captura:
+  archivo: ./capturas/teeko.jpg
   alt: Nivel de plataformas en la selva, con palmeras, cajas y enemigos con forma de fruta
   credito: Ripe Render Games (captura de la página de Steam)
 actualizado: 2026-11-19

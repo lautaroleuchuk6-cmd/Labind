@@ -16,6 +16,10 @@ fuentes:
   steamAppId: 2376260
 portada:
   archivo: ./portadas/mariachi-legends.jpg
+  alt: Arte de portada de Mariachi Legends, con el logo del juego
+  credito: Halberd Studios (arte de la página de Steam)
+captura:
+  archivo: ./capturas/mariachi-legends.jpg
   alt: Una silueta camina entre cientos de velas encendidas, de noche
   credito: Halberd Studios (captura de la página de Steam)
 actualizado: 2026-11-19

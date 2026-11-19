@@ -1,4 +1,5 @@
 ---
+import { Image } from 'astro:assets';
 import { getEntry, render } from 'astro:content';
 import Base from '../../../layouts/Base.astro';
 import Estado from '../../../components/Estado.astro';
@@ -117,6 +118,20 @@ const hayOferta = data.mejorOferta && (!data.precio || data.mejorOferta.usd < da
           <Content />
         </div>
 
+        {
+          data.captura && (
+            <figure class="captura">
+              <Image
+                src={data.captura.archivo}
+                alt={data.captura.alt}
+                widths={[480, 800, 1280]}
+                sizes="(min-width: 60rem) 44rem, 100vw"
+              />
+              <figcaption class="apagado">Así se ve. Imagen: {data.captura.credito}</figcaption>
+            </figure>
+          )
+        }
+
         <section class="bloque" aria-labelledby="linea">
           <div class="bloque__cabeza">
             <h2 id="linea">Línea de tiempo</h2>
@@ -229,7 +244,7 @@ const hayOferta = data.mejorOferta && (!data.precio || data.mejorOferta.usd < da
     margin: 0.6rem 0 0.4rem;
   }
   .ficha__resumen {
-    font-size: 1.2rem;
+    font-size: 1.08rem;
     max-width: 34rem;
   }
   .datos {
@@ -262,10 +277,10 @@ const hayOferta = data.mejorOferta && (!data.precio || data.mejorOferta.usd < da
   }
   @media (min-width: 60rem) {
     .ficha__cabeza {
-      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      grid-template-columns: minmax(0, 26rem) minmax(0, 1fr);
     }
     .ficha__cuerpo {
-      grid-template-columns: minmax(0, 1fr) 21rem;
+      grid-template-columns: minmax(0, 1fr) 19rem;
       align-items: start;
     }
     .ficha__lado {
@@ -280,6 +295,19 @@ const hayOferta = data.mejorOferta && (!data.precio || data.mejorOferta.usd < da
     }
   }
 
+  .captura {
+    margin: 1.5rem 0 0;
+    max-width: 44rem;
+  }
+  .captura :global(img) {
+    width: 100%;
+    border: var(--borde);
+    border-radius: var(--radio);
+  }
+  .captura figcaption {
+    margin-top: 0.4rem;
+    font-size: 0.8rem;
+  }
   .opinion {
     margin-bottom: 1.5rem;
   }
@@ -292,7 +320,7 @@ const hayOferta = data.mejorOferta && (!data.precio || data.mejorOferta.usd < da
     margin: 0;
     padding-left: 1.1rem;
     border-left: 4px solid var(--fucsia);
-    font: 500 clamp(1.2rem, 2.6vw, 1.45rem) / 1.35 var(--titulos);
+    font: 500 clamp(1.1rem, 2.2vw, 1.25rem) / 1.35 var(--titulos);
     max-width: 38rem;
   }
   .opinion blockquote p {
@@ -340,7 +368,7 @@ const hayOferta = data.mejorOferta && (!data.precio || data.mejorOferta.usd < da
   }
   .linea h3 {
     margin: 0.3rem 0 0.2rem;
-    font-size: 1.25rem;
+    font-size: 1.1rem;
   }
   .linea p {
     margin: 0;
@@ -360,7 +388,7 @@ const hayOferta = data.mejorOferta && (!data.precio || data.mejorOferta.usd < da
     margin: 0.75rem 0 0;
   }
   .caja__precio {
-    font: 800 1.9rem/1.1 var(--titulos);
+    font: 800 1.6rem/1.1 var(--titulos);
   }
   .caja__precio .apagado {
     font: 400 0.9rem var(--texto);

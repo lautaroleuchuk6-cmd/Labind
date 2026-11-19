@@ -64,7 +64,10 @@ const juegos = defineCollection({
         })
         .partial()
         .default({}),
+      // Arte oficial con el logo del juego, para que se reconozca de un vistazo.
       portada: portada(image),
+      // Opcional: una captura del juego, que se muestra dentro de la ficha.
+      captura: portada(image),
       // La opinión de quien escribe. La completa una persona, nunca Claude.
       porQueSeguirlo: z.string().optional(),
       actualizado: z.coerce.date(),

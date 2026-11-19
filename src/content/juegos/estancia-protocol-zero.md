@@ -15,6 +15,10 @@ fuentes:
   steamAppId: 4679730
 portada:
   archivo: ./portadas/estancia-protocol-zero.jpg
+  alt: Arte de portada de Estancia Protocol Zero, con el logo del juego
+  credito: 490 Forge (arte de la página de Steam)
+captura:
+  archivo: ./capturas/estancia-protocol-zero.jpg
   alt: Hall de una casona antigua, con escalera central, columnas y una araña de techo
   credito: 490 Forge (captura de la página de Steam)
 actualizado: 2026-11-19

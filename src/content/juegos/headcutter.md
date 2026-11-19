@@ -18,6 +18,10 @@ fuentes:
   steamAppId: 4603230
 portada:
   archivo: ./portadas/headcutter.jpg
+  alt: Arte de portada de HEADCUTTER, con el logo del juego
+  credito: devpetrichor (arte de la página de Steam)
+captura:
+  archivo: ./capturas/headcutter.jpg
   alt: Vista en primera persona con un revólver en un salón rojo con cuadros y una araña de techo
   credito: devpetrichor (captura de la página de Steam)
 actualizado: 2026-11-19

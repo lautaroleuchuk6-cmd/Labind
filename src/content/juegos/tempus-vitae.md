@@ -16,6 +16,10 @@ fuentes:
   steamAppId: 2360820
 portada:
   archivo: ./portadas/tempus-vitae.jpg
+  alt: Arte de portada de Tempus Vitae, con el logo del juego
+  credito: Whiteboard Games (arte de la página de Steam)
+captura:
+  archivo: ./capturas/tempus-vitae.jpg
   alt: Vista en primera persona de dos manos, una con un guante que frena el tiempo, frente a robots en una estación espacial
   credito: Whiteboard Games (captura de la página de Steam)
 actualizado: 2026-11-19

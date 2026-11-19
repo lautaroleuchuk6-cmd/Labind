@@ -17,6 +17,10 @@ fuentes:
   steamAppId: 4230650
 portada:
   archivo: ./portadas/black-sailors.jpg
+  alt: 'Arte de portada de Black Sailors: Bay Of All Saints, con el logo del juego'
+  credito: Mandinga (arte de la página de Steam)
+captura:
+  archivo: ./capturas/black-sailors.jpg
   alt: Vista aérea de un combate naval por turnos frente a una costa con casas
   credito: Mandinga (captura de la página de Steam)
 actualizado: 2026-11-19

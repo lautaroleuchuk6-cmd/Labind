@@ -30,10 +30,14 @@ fuentes:                     # lo que lee la tarea diaria
   steamAppId: 000000         # el número de la URL de Steam
   itchRss: https://dev.itch.io/juego/devlog.rss
   youtubeCanalId: UCxxxxxxxxxxxxxxxxxxxxxx   # el id del canal, empieza con UC
-portada:                     # solo press kit o página de Steam. Guardala en ./portadas/
+portada:                     # arte oficial con el logo (press kit o Steam). Va en ./portadas/
   archivo: ./portadas/slug-del-juego.jpg
-  alt: Qué se ve en la imagen
+  alt: Arte de portada de Nombre del juego, con el logo del juego
   credito: Nombre del estudio (press kit)
+captura:                     # opcional: una captura del juego. Va en ./capturas/
+  archivo: ./capturas/slug-del-juego.jpg
+  alt: Qué se ve en la captura
+  credito: Nombre del estudio (captura de la página de Steam)
 porQueSeguirlo: Lo escribe una persona. Una o dos oraciones con tu opinión.
 actualizado: 2026-11-19
 borrador: false

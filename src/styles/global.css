@@ -11,11 +11,11 @@
   --titulos: 'Bricolage Grotesque Variable', 'Trebuchet MS', system-ui, sans-serif;
   --texto: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
 
-  --ancho: 68rem;
+  --ancho: 72rem;
   --ancho-lectura: 42rem;
-  --radio: 14px;
+  --radio: 12px;
   --borde: 1.5px solid var(--marron-claro);
-  --sombra: 4px 4px 0 var(--marron-claro);
+  --sombra: 3px 3px 0 var(--marron-claro);
 }
 
 *,
@@ -34,8 +34,8 @@ body {
   background: var(--crema);
   color: var(--marron-oscuro);
   font-family: var(--texto);
-  font-size: 1.0625rem;
-  line-height: 1.6;
+  font-size: 1rem;
+  line-height: 1.55;
   min-height: 100dvh;
   display: flex;
   flex-direction: column;
@@ -46,7 +46,7 @@ main {
   width: 100%;
   max-width: var(--ancho);
   margin: 0 auto;
-  padding: 2rem 1rem 4rem;
+  padding: 1.5rem 1rem 3rem;
 }
 
 h1,
@@ -59,16 +59,16 @@ h3 {
   text-wrap: balance;
 }
 h1 {
-  font-size: clamp(2rem, 5.5vw, 3.25rem);
+  font-size: clamp(1.8rem, 4.2vw, 2.6rem);
   font-weight: 800;
   color: var(--fucsia);
 }
 h2 {
-  font-size: clamp(1.4rem, 3.2vw, 1.85rem);
+  font-size: clamp(1.25rem, 2.6vw, 1.5rem);
   font-weight: 750;
 }
 h3 {
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   font-weight: 700;
 }
 p {
@@ -190,15 +190,15 @@ a.etiqueta:hover {
 
 .grilla {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 17.5rem), 1fr));
-  gap: 1.25rem;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr));
+  gap: 1rem;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
 .bloque {
-  margin-top: 3.25rem;
+  margin-top: 2.25rem;
 }
 .bloque__cabeza {
   display: flex;
@@ -206,7 +206,7 @@ a.etiqueta:hover {
   align-items: baseline;
   justify-content: space-between;
   gap: 0.25rem 1rem;
-  margin-bottom: 1rem;
+  margin-bottom: 0.75rem;
 }
 .bloque__cabeza h2 {
   margin: 0;
@@ -214,10 +214,10 @@ a.etiqueta:hover {
 
 .cabeza-pagina {
   max-width: var(--ancho-lectura);
-  margin-bottom: 2rem;
+  margin-bottom: 1.25rem;
 }
 .cabeza-pagina p {
-  font-size: 1.15rem;
+  font-size: 1.02rem;
 }
 
 .vacio {
@@ -233,6 +233,8 @@ a.etiqueta:hover {
 /* Texto largo: notas y páginas */
 .prosa {
   max-width: var(--ancho-lectura);
+  font-size: 1.0625rem;
+  line-height: 1.6;
 }
 .prosa h2 {
   margin-top: 1.8em;

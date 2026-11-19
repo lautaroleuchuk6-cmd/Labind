@@ -34,8 +34,10 @@ fuente ni los enlaces desde contenido real.
    sin poner y marcá en la nota dónde va la opinión con un comentario
    `<!-- OPINIÓN: ... -->`.
 4. **Imágenes** solo del press kit oficial o de la página de Steam del juego,
-   siempre con `credito`. Nunca de un buscador. Sin imagen oficial, la ficha va
-   sin `portada`.
+   siempre con `credito`. Nunca de un buscador. La `portada` es el arte
+   oficial con el logo (en Steam, la cápsula de 616x353 en su versión 2x), para
+   que el juego se reconozca de un vistazo; una captura del juego va en
+   `captura`, que es opcional. Sin arte oficial, la ficha va sin `portada`.
 5. **Rumores:** `seccion: rumores`, `rumor: sin confirmar` y al menos una
    fuente. Si se confirma o resulta falso, se actualiza la misma nota: cambiá
    `rumor`, poné `actualizada` y contá arriba qué pasó.

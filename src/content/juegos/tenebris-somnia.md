@@ -25,6 +25,10 @@ fuentes:
   steamAppId: 2121510
 portada:
   archivo: ./portadas/tenebris-somnia.jpg
+  alt: Arte de portada de Tenebris Somnia, con el logo del juego
+  credito: New Blood Interactive (arte de la página de Steam)
+captura:
+  archivo: ./capturas/tenebris-somnia.jpg
   alt: Primer plano de una mujer rubia con gorro de lana, iluminada en azul, en una de las escenas filmadas del juego
   credito: New Blood Interactive (captura de la página de Steam)
 actualizado: 2026-11-19

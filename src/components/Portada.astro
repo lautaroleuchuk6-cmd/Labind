@@ -21,7 +21,7 @@ const { portada, nombre, credito = false, prioridad = false } = Astro.props;
         src={portada.archivo}
         alt={portada.alt}
         widths={[400, 800, 1200]}
-        sizes="(min-width: 60rem) 34rem, 100vw"
+        sizes="(min-width: 60rem) 36rem, 100vw"
         loading={prioridad ? 'eager' : 'lazy'}
       />
     ) : (
@@ -40,7 +40,7 @@ const { portada, nombre, credito = false, prioridad = false } = Astro.props;
   .portada :global(img),
   .portada__vacia {
     width: 100%;
-    aspect-ratio: 16 / 9;
+    aspect-ratio: 616 / 353;
     object-fit: cover;
     border-radius: calc(var(--radio) - 2px);
   }

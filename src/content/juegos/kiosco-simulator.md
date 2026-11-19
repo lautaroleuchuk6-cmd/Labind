@@ -16,6 +16,10 @@ fuentes:
   steamAppId: 5149680
 portada:
   archivo: ./portadas/kiosco-simulator.jpg
+  alt: Arte de portada de Kiosco Simulator, con el logo del juego
+  credito: PWH Games (arte de la página de Steam)
+captura:
+  archivo: ./capturas/kiosco-simulator.jpg
   alt: Un cliente del otro lado de la reja de un kiosco, con el mostrador y paquetes de snacks en primer plano
   credito: PWH Games (captura de la página de Steam)
 actualizado: 2026-11-19
