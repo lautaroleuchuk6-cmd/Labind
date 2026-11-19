@@ -4,5 +4,5 @@ nombre: 490 Forge
 pais: Argentina
 resumen: Estudio independiente argentino que desarrolla y publica Estancia Protocol Zero, un survival horror ambientado en Neuquén.
 links: {}
-borrador: true
+borrador: false
 ---

@@ -5,5 +5,5 @@ pais: Argentina
 resumen: Estudio de Buenos Aires fundado en 2023. Desarrolla y publica Zupay, un hack and slash ambientado en la guerra de la independencia.
 links:
   itch: https://abstracttales.itch.io/
-borrador: true
+borrador: false
 ---

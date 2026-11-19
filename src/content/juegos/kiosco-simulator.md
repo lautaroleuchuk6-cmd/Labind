@@ -19,7 +19,7 @@ portada:
   alt: Un cliente del otro lado de la reja de un kiosco, con el mostrador y paquetes de snacks en primer plano
   credito: PWH Games (captura de la página de Steam)
 actualizado: 2026-11-19
-borrador: true
+borrador: false
 ---
 
 En Kiosco Simulator atendés clientes, administrás el stock y cuidás la

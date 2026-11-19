@@ -19,7 +19,7 @@ portada:
   alt: Una silueta camina entre cientos de velas encendidas, de noche
   credito: Halberd Studios (captura de la página de Steam)
 actualizado: 2026-11-19
-borrador: true
+borrador: false
 ---
 
 En Mariachi Legends recorrés Santa Mascota como Pablo Cruz, un detective

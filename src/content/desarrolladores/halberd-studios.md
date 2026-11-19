@@ -5,5 +5,5 @@ pais: México
 resumen: Estudio mexicano que desarrolla y publica Mariachi Legends, un juego de acción y plataformas inspirado en el folclore de México.
 links:
   web: https://www.halberdstudios.com/mariachi-legends
-borrador: true
+borrador: false
 ---

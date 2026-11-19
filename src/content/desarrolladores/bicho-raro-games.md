@@ -6,5 +6,5 @@ pais: Argentina
 resumen: Estudio independiente de Buenos Aires que desarrolla y publica La Hija del Delta, basado en la novela de Alejandra Bruno.
 links:
   web: https://bichorarogames.com/tsd.html
-borrador: true
+borrador: false
 ---

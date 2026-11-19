@@ -5,5 +5,5 @@ nombre: Saibot Studios
 pais: Argentina
 resumen: Estudio que desarrolla Tenebris Somnia junto al director argentino Andrés Borghi. El juego lo publica New Blood Interactive.
 links: {}
-borrador: true
+borrador: false
 ---

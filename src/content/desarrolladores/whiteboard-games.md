@@ -6,5 +6,5 @@ pais: Argentina
 resumen: Estudio argentino que desarrolla y publica Tempus Vitae, un FPS metroidvania de ciencia ficción con viajes en el tiempo.
 links:
   web: https://whiteboard.games/
-borrador: true
+borrador: false
 ---

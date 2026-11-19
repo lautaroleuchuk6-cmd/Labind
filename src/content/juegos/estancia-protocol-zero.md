@@ -18,7 +18,7 @@ portada:
   alt: Hall de una casona antigua, con escalera central, columnas y una araña de techo
   credito: 490 Forge (captura de la página de Steam)
 actualizado: 2026-11-19
-borrador: true
+borrador: false
 ---
 
 El juego te manda a una estancia en el Cerro Ocaso a buscar a un compañero

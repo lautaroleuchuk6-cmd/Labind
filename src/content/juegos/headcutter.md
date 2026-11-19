@@ -21,7 +21,7 @@ portada:
   alt: Vista en primera persona con un revólver en un salón rojo con cuadros y una araña de techo
   credito: devpetrichor (captura de la página de Steam)
 actualizado: 2026-11-19
-borrador: true
+borrador: false
 ---
 
 HEADCUTTER lo hace una sola persona, devpetrichor, desde Buenos Aires. Rastreás

@@ -6,5 +6,5 @@ resumen: Estudio brasileño, también conocido como Mandinga Games. Desarrolla y
 links:
   web: https://mandinga.games
   itch: https://mandinga.itch.io/
-borrador: true
+borrador: false
 ---

@@ -19,7 +19,7 @@ portada:
   alt: Vista desde arriba de un caserío con un rancho en llamas y un gaucho en el centro
   credito: Abstract Tales (captura de la página de Steam)
 actualizado: 2026-11-19
-borrador: true
+borrador: false
 ---
 
 Un demonio del folclore andino salva de la muerte a un gaucho y lo empuja a

@@ -5,5 +5,5 @@ pais: Argentina
 resumen: Desarrollador solista de Buenos Aires. Hace y publica HEADCUTTER, un FPS que mezcla spaghetti western y ciencia ficción.
 links:
   web: https://www.devpetrichor.com.ar/
-borrador: true
+borrador: false
 ---

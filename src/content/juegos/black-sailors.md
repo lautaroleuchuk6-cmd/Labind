@@ -20,7 +20,7 @@ portada:
   alt: Vista aérea de un combate naval por turnos frente a una costa con casas
   credito: Mandinga (captura de la página de Steam)
 actualizado: 2026-11-19
-borrador: true
+borrador: false
 ---
 
 El juego transcurre en la Bahía de Todos los Santos: personas que fueron

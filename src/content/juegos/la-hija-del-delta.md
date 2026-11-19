@@ -23,7 +23,7 @@ portada:
   alt: Un pantano con niebla, palmeras secas y restos de construcciones de madera
   credito: Bicho Raro Games (captura de la página de Steam)
 actualizado: 2026-11-19
-borrador: true
+borrador: false
 ---
 
 La Hija del Delta sigue a Julia por un pantano peligroso mientras descubre su

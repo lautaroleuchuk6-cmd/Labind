@@ -19,7 +19,7 @@ portada:
   alt: Nivel de plataformas en la selva, con palmeras, cajas y enemigos con forma de fruta
   credito: Ripe Render Games (captura de la página de Steam)
 actualizado: 2026-11-19
-borrador: true
+borrador: false
 ---
 
 Teeko salta, aplasta enemigos y planta árboles para defenderse de los gigantes

@@ -19,7 +19,7 @@ portada:
   alt: Vista en primera persona de dos manos, una con un guante que frena el tiempo, frente a robots en una estación espacial
   credito: Whiteboard Games (captura de la página de Steam)
 actualizado: 2026-11-19
-borrador: true
+borrador: false
 ---
 
 Sos Alex, una astronauta perdida en el tiempo que busca a su hermano en la

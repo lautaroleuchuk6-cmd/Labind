@@ -5,5 +5,5 @@ pais: Argentina
 resumen: Estudio argentino que desarrolla y publica Kiosco Simulator, un simulador ambientado en un kiosco del conurbano bonaerense.
 links:
   web: https://kioscosimulator.com.ar/
-borrador: true
+borrador: false
 ---
